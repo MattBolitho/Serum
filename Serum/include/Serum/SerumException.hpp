@@ -1,8 +1,8 @@
 /// @file SerumException.hpp
 /// Defines an exception type for the Serum library.
 
-#ifndef SERUM_EXCEPTION_HPP
-#define SERUM_EXCEPTION_HPP
+#ifndef SERUM_SERUM_EXCEPTION_HPP
+#define SERUM_SERUM_EXCEPTION_HPP
 
 #include <string>
 #include <stdexcept>
@@ -29,4 +29,4 @@ namespace Serum
 	};
 }
 
-#endif // SERUM_EXCEPTION_HPP
+#endif // SERUM_SERUM_EXCEPTION_HPP
