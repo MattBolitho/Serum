@@ -9,4 +9,5 @@ include_directories(Serum/include)
 
 add_executable(Serum.Tests
 	Serum.Tests/src/SerumExceptionTests.cpp
-	Serum.Tests/src/Serum.Tests.cpp "Serum/include/Serum/Bindings/Binding.hpp")
+	Serum.Tests/src/Bindings/ConstantBindingTests.cpp
+	Serum.Tests/src/Serum.Tests.cpp)

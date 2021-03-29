@@ -38,6 +38,10 @@ namespace Serum::Bindings
 			/// @param binding The binding to move.
 			Binding& operator=(Binding&& binding) = default;
 
+			/// Resolves the binding.
+			/// @returns The resolved service.
+			virtual TRequest Resolve() = 0;
+
 			/// Gets the binding type.
 			/// @returns The binding type.
 			[[nodiscard]] BindingType GetBindingType() const noexcept
