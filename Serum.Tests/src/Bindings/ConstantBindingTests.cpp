@@ -2,7 +2,7 @@
 /// Unit tests for the ConstantBinding type.
 
 #include "catch.hpp"
-#include "Serum/Bindings/ConstantBinding.hpp"
+#include "Serum/Serum.hpp"
 
 namespace Serum::Bindings::ConstantBindingTests
 {
