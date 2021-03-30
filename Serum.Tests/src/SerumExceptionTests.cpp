@@ -3,7 +3,7 @@
 
 #include <cstring>
 #include "catch.hpp"
-#include "Serum/SerumException.hpp"
+#include "Serum/Serum.hpp"
 
 namespace Serum::SerumExceptionTests
 {
