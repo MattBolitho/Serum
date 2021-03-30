@@ -2,4 +2,6 @@
 .vscode
 .idea
 
+**/*.DotSettings.user
+
 build

@@ -7,6 +7,7 @@
 #include <string>
 #include <typeindex>
 #include "Serum/Bindings/BindingType.hpp"
+#include "Serum/Bindings/BindingKey.hpp"
 
 namespace Serum::Bindings
 {
@@ -61,6 +62,13 @@ namespace Serum::Bindings
 			[[nodiscard]] std::string GetName() const noexcept
 			{
 				return name;
+			}
+
+			/// Gets a type index for the binding.
+			/// @returns The type index for the binding.
+			[[nodiscard]] BindingKey GetBindingKey() const noexcept
+			{
+				return BindingKey(requestType, name);
 			}
 
 		protected:
