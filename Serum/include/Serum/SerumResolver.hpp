@@ -5,10 +5,10 @@
 #ifndef SERUM_SERUM_RESOLVER
 #define SERUM_SERUM_RESOLVER
 
-namespace Serum 
+namespace Serum
 {
     template <typename TResolve>
-    class SerumResolver 
+    class SerumResolver
     {
         public:
             /// Public virtual destructor.
@@ -20,7 +20,7 @@ namespace Serum
 
             /// Move constructor.
             /// @param resolver The resolver.
-            SerumResolver(const SerumResolver&& resolver) noexcept = default;
+            SerumResolver(SerumResolver&& resolver) noexcept = default;
 
             /// Copy assignment operator.
             /// @param resolver The resolver.
