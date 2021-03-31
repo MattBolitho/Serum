@@ -18,28 +18,10 @@ namespace Serum::Bindings::BindingKeyTests
 		REQUIRE(name == bindingKey.GetName());
 	}
 
-	TEST_CASE("BindingKey_LessThan")
-	{
-		const auto key1 = BindingKey(typeid(int), "test");
-		const auto key2 = BindingKey(typeid(bool), "");
-
-		SECTION("WhenEqual_ReturnsFalseInBothCases")
-		{
-			REQUIRE_FALSE(key1 < key1);
-			REQUIRE_FALSE(key2 < key2);
-		}
-
-		SECTION("WhenDifferent_IsStrictOrdering")
-		{
-			REQUIRE(key1 < key2);
-			REQUIRE_FALSE(key2 < key1);
-		}
-	}
-
 	TEST_CASE("BindingKey_ostreamOperator<<_StreamsCorrectValue")
 	{
 		std::stringstream stringStream;
-		const std::string expected = "[int, test]";
+		const std::string expected = "[int, \"test\"]";
 		const auto bindingKey = BindingKey(typeid(int), "test");
 
 		stringStream << bindingKey;

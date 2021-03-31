@@ -4,6 +4,7 @@
 #ifndef SERUM_BINDINGS_BINDING_KEY_HPP
 #define SERUM_BINDINGS_BINDING_KEY_HPP
 
+#include <iomanip>
 #include <ostream>
 #include <string>
 #include <typeindex>
@@ -33,13 +34,12 @@ namespace Serum::Bindings
 			/// @param key The key.
 			BindingKey& operator=(const BindingKey& key) = default;
 
-			/// Compares 2 keys.
-			/// @param key The other key.
-			/// @returns A comparison of the keys.
-			bool operator <(const BindingKey& key) const noexcept
+			/// Equality operator for binding keys.
+			/// @param otherKey The other binding key.
+			/// @returns True if the keys are the same and false otherwise.
+			bool operator==(const BindingKey& otherKey) const noexcept
 			{
-				// todo - add names
-				return requestType < key.GetRequestType();
+				return name == otherKey.name && requestType == otherKey.requestType;
 			}
 
 			/// Gets the request type information.
@@ -67,9 +67,25 @@ namespace Serum::Bindings
 	/// @returns The stream.
 	inline std::ostream& operator <<(std::ostream& stream, const BindingKey& bindingKey)
 	{
-		stream << "[" << bindingKey.GetRequestType().name() << ", " << bindingKey.GetName() << "]";
+		stream << "[" << bindingKey.GetRequestType().name() << ", " << std::quoted(bindingKey.GetName()) << "]";
 		return stream;
 	}
+}
+
+namespace std
+{
+	// Injects a template specialization for Serum::Bindings::BindingKey into the standard
+	// namespace so it can be used in maps.
+	// See: https://en.cppreference.com/w/cpp/utility/hash
+
+	template <>
+	struct hash<Serum::Bindings::BindingKey>
+	{
+		std::size_t operator()(const Serum::Bindings::BindingKey& key) const noexcept
+		{
+			return std::hash<std::string>{}(key.GetName()) ^ std::hash<std::type_index>{}(key.GetRequestType());
+		}
+	};
 }
 
 #endif // SERUM_BINDINGS_BINDING_KEY_HPP
