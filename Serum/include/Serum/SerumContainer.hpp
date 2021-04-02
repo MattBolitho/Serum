@@ -31,10 +31,6 @@ namespace Serum
 			template <typename TRequest>
 			[[nodiscard]] TRequest Get(const std::string& name = "") const
 			{
-				static_assert(
-					std::is_copy_assignable<TRequest>::value,
-					"Cannot resolve constant - the type must be copy assignable.");
-
 				const auto key = Bindings::BindingKey(typeid(TRequest), name);
 				const auto optionalBinding = GetBinding(key);
 
