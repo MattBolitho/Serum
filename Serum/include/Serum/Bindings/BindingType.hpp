@@ -12,6 +12,9 @@ namespace Serum::Bindings
 	/// An enumeration for the different types of bindings.
 	enum class BindingType
 	{
+		/// An unknown binding type.
+		Unknown,
+
 		/// The types are bound such that the container
 		/// constructs the instance.
 		Construct,
@@ -30,6 +33,10 @@ namespace Serum::Bindings
 	{
 		switch (binding)
 		{
+			case BindingType::Unknown:
+				stream << "Unknown";
+				break;
+
 			case BindingType::Construct:
 				stream << "Construct";
 				break;
