@@ -39,7 +39,7 @@ namespace Serum::Internal
 			/// @returns The wrapped binding as a constant binding.
 			/// @throws SerumException If the underlying type is not a constant binding.
 			template <typename TRequest>
-			Bindings::ConstantBinding<TRequest> AsConstantBinding() const
+			[[nodiscard]] Bindings::ConstantBinding<TRequest> AsConstantBinding() const
 			{
 				VerifyBindingType(Bindings::BindingType::Constant);
 
@@ -49,8 +49,15 @@ namespace Serum::Internal
 				}
 				catch (const std::bad_any_cast&)
 				{
-					throw SerumException("Failed to cast binding to ConstantBinding.");
+					throw SerumException("Failed to cast underlying binding to ConstantBinding.");
 				}
+			}
+
+			/// Gets the underlying binding type.
+			/// @returns The underlying binding type.
+			[[nodiscard]] Bindings::BindingType GetBindingType() const noexcept
+			{
+				return bindingType;
 			}
 
 		private:
