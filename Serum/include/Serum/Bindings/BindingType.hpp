@@ -4,7 +4,6 @@
 #ifndef SERUM_BINDINGS_BINDING_TYPE_HPP
 #define SERUM_BINDINGS_BINDING_TYPE_HPP
 
-#include <string>
 #include <ostream>
 
 namespace Serum::Bindings
@@ -15,17 +14,17 @@ namespace Serum::Bindings
 		/// An unknown binding type.
 		Unknown,
 
-		/// The types are bound such that the container
-		/// constructs the instance.
+		/// The types are bound such that the container constructs the instance.
 		Construct,
 
-		/// The types are bound such that a constant value
-		/// is always resolved.
+		/// The type is bound such that a constant value is always resolved.
 		Constant,
 
-		/// The types are bound such that the container calls
-		/// a given function to resolve the instance.
-		Function
+		/// The type is bound to a function which resolves the instance.
+		Function,
+
+		/// The type is bound to the result of a method call on a SerumResolver instance.
+		Resolver
 	};
 
 	/// Overload of the stream operator for string functionality.
@@ -47,6 +46,10 @@ namespace Serum::Bindings
 
 			case BindingType::Function:
 				stream << "Function";
+				break;
+
+			case BindingType::Resolver:
+				stream << "Resolver";
 				break;
 
 			default:

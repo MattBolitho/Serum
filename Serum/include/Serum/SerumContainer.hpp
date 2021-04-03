@@ -49,6 +49,7 @@ namespace Serum
 
 					case Bindings::BindingType::Construct:
 					case Bindings::BindingType::Function:
+					case Bindings::BindingType::Resolver:
 						throw SerumException("Currently unsupported.");
 
 					case Bindings::BindingType::Unknown:
@@ -60,16 +61,21 @@ namespace Serum
 			/// Binds the type to a constant value. When the type is requested, the container
 			/// will return a copy of the value.
 			/// @tparam TRequest The type of the requested object.
+			/// @tparam TResolve The type of the constant to resolve. This must be convertible from TRequest.
 			/// @param value The value to return.
 			/// @param name Optionally, a name for the binding.
 			/// @returns This instance.
-			/// @throws SerumException If a binding of type TRequest and with the given name already exists.
-			template <typename TRequest>
-			SerumContainer& BindConstant(const TRequest& value, const std::string& name = "")
+			/// @throws SerumException If a binding of type TRequest with the given name already exists.
+			template <typename TRequest, typename TResolve = TRequest>
+			SerumContainer& BindConstant(const TResolve& value, const std::string& name = "")
 			{
 				static_assert(
-					std::is_copy_assignable<TRequest>::value,
-					"Cannot bind constant - the type must be copy assignable.");
+					std::is_copy_assignable<TResolve>::value,
+					"Cannot bind constant - the resolution type must be copy assignable.");
+
+				static_assert(
+					std::is_convertible<TRequest, TResolve>::value,
+					"Cannot bind constant - the resolution type must be convertible from the request type.");
 
 				auto binding = Bindings::ConstantBinding<TRequest>(value);
 				auto key = binding.GetBindingKey();

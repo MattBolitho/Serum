@@ -30,8 +30,8 @@ namespace Serum::SerumContainerTests
 		SECTION("CanBeChanined")
 		{
 			auto container = SerumContainer()
-								.BindConstant<std::string>("test")
-								.BindConstant<float>(5.f);
+								.BindConstant<std::string>(std::string("test"))
+								.BindConstant<double, float>(5.f);
 		}
 	}
 }
