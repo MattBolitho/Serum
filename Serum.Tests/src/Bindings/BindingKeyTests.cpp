@@ -21,11 +21,13 @@ namespace Serum::Bindings::BindingKeyTests
 	TEST_CASE("BindingKey_ostreamOperator<<_StreamsCorrectValue")
 	{
 		std::stringstream stringStream;
+		std::stringstream expectedStringStream;
 		const std::string expected = "[int, \"test\"]";
+		expectedStringStream << "[" << typeid(int).name() << ", \"test\"]";
 		const auto bindingKey = BindingKey(typeid(int), "test");
 
 		stringStream << bindingKey;
 
-		REQUIRE(expected == stringStream.str());
+		REQUIRE(expectedStringStream.str() == stringStream.str());
 	}
 }
