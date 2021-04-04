@@ -60,15 +60,7 @@ namespace Serum::Internal
 			[[nodiscard]] Bindings::ConstantBinding<TRequest> AsConstantBinding() const
 			{
 				VerifyBindingType(Bindings::BindingType::Constant);
-
-				try
-				{
-					return std::any_cast<Bindings::ConstantBinding<TRequest>>(binding);
-				}
-				catch (const std::bad_any_cast&)
-				{
-					throw SerumException("Failed to cast underlying binding to ConstantBinding.");
-				}
+				return this->CastBinding<Bindings::ConstantBinding<TRequest>>();
 			}
 
 			/// Gets the wrapped binding as a function binding.
@@ -79,15 +71,7 @@ namespace Serum::Internal
 			[[nodiscard]] Bindings::FunctionBinding<TRequest> AsFunctionBinding() const
 			{
 				VerifyBindingType(Bindings::BindingType::Function);
-
-				try
-				{
-					return std::any_cast<Bindings::FunctionBinding<TRequest>>(binding);
-				}
-				catch (const std::bad_any_cast&)
-				{
-					throw SerumException("Failed to cast underlying binding to FunctionBinding.");
-				}
+				return this->CastBinding<Bindings::FunctionBinding<TRequest>>();
 			}
 
 		private:
@@ -110,6 +94,20 @@ namespace Serum::Internal
 					throw SerumException(errorMessageStream.str());
 				}
 			}
+
+			template <typename TBinding>
+			[[nodiscard]] TBinding CastBinding() const
+			{
+				try
+				{
+					return std::any_cast<TBinding>(binding);
+				}
+				catch (const std::bad_any_cast&)
+				{
+					throw SerumException("Failed to cast underlying binding.");
+				}
+			}
+
 
 			Bindings::BindingType bindingType;
 			std::any binding;
