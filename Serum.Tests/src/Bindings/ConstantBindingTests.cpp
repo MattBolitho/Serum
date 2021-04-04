@@ -2,24 +2,11 @@
 /// Unit tests for the ConstantBinding type.
 
 #include "catch.hpp"
-#include "Serum/Serum.hpp"
+#include "Serum.Tests/TestType.hpp"
+#include "Serum/Bindings/ConstantBinding.hpp"
 
 namespace Serum::Bindings::ConstantBindingTests
 {
-	struct TestType final
-	{
-		int intValue = 0;
-		bool boolValue = false;
-		std::string stringValue = "";
-
-		bool operator==(const TestType& other) const
-		{
-			return intValue == other.intValue
-				&& boolValue == other.boolValue
-				&& stringValue == other.stringValue;
-		}
-	};
-
 	TEST_CASE("ConstantBinding_ConstructorCorrectlyIntializesMembers")
 	{
 		const std::string name = "Test Name";

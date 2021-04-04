@@ -17,11 +17,12 @@ namespace Serum::Bindings
 		public:
 			/// Initializes a new instance of the ConstantBinding class.
 			/// @param value The value.
-			/// @param name The name.
+			/// @param name Optionally, the name.
 			explicit ConstantBinding(
 				const T& value,
 				const std::string& name = "") noexcept
-				: Binding<T>(BindingType::Constant, name), value(value)
+				: Binding<T>(BindingType::Constant, name),
+				  value(value)
 			{
 			}
 

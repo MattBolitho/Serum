@@ -6,7 +6,7 @@
 
 namespace Serum::Internal::AnyBindingWrapperTests
 {
-	TEST_CASE("AnyBindingWrapper_FromConstant")
+	TEST_CASE("AnyBindingWrapper_FromConstantBinding")
 	{
 		SECTION("CanBeConvertedToConstantBinding")
 		{
@@ -15,6 +15,20 @@ namespace Serum::Internal::AnyBindingWrapperTests
 			const auto wrapper = AnyBindingWrapper::FromConstantBinding(constantBinding);
 
 			auto convertedBinding = wrapper.AsConstantBinding<int>();
+
+			REQUIRE(constantBinding.Resolve() == convertedBinding.Resolve());
+		}
+	}
+
+	TEST_CASE("AnyBindingWrapper_FromFunctionBinding")
+	{
+		SECTION("CanBeConvertedToFunctionBinding")
+		{
+			auto expected = []() { return 1; };
+			auto constantBinding = Bindings::FunctionBinding<int>(expected);
+			const auto wrapper = AnyBindingWrapper::FromFunctionBinding(constantBinding);
+
+			auto convertedBinding = wrapper.AsFunctionBinding<int>();
 
 			REQUIRE(constantBinding.Resolve() == convertedBinding.Resolve());
 		}

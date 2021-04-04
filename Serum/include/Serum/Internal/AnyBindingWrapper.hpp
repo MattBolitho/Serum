@@ -11,6 +11,7 @@
 #include "Serum/SerumException.hpp"
 #include "Serum/Bindings/BindingType.hpp"
 #include "Serum/Bindings/ConstantBinding.hpp"
+#include "Serum/Bindings/FunctionBinding.hpp"
 
 namespace Serum::Internal
 {
@@ -34,6 +35,23 @@ namespace Serum::Internal
 				return AnyBindingWrapper(Bindings::BindingType::Constant, binding);
 			}
 
+			/// Creates an AnyBindingWrapper instance for the given function binding.
+			/// @tparam TRequest The type of the request.
+			/// @param binding The binding.
+			/// @returns An AnyBindingWrapper instance for the given function binding.
+			template <typename TRequest>
+			static AnyBindingWrapper FromFunctionBinding(const Bindings::FunctionBinding<TRequest>& binding) noexcept
+			{
+				return AnyBindingWrapper(Bindings::BindingType::Function, binding);
+			}
+
+			/// Gets the underlying binding type.
+			/// @returns The underlying binding type.
+			[[nodiscard]] Bindings::BindingType GetBindingType() const noexcept
+			{
+				return bindingType;
+			}
+
 			/// Gets the wrapped binding as a constant binding.
 			/// @tparam TRequest The type of the request.
 			/// @returns The wrapped binding as a constant binding.
@@ -53,11 +71,23 @@ namespace Serum::Internal
 				}
 			}
 
-			/// Gets the underlying binding type.
-			/// @returns The underlying binding type.
-			[[nodiscard]] Bindings::BindingType GetBindingType() const noexcept
+			/// Gets the wrapped binding as a function binding.
+			/// @tparam TRequest The type of the request.
+			/// @returns The wrapped binding as a function binding.
+			/// @throws SerumException If the underlying type is not a function binding.
+			template <typename TRequest>
+			[[nodiscard]] Bindings::FunctionBinding<TRequest> AsFunctionBinding() const
 			{
-				return bindingType;
+				VerifyBindingType(Bindings::BindingType::Function);
+
+				try
+				{
+					return std::any_cast<Bindings::FunctionBinding<TRequest>>(binding);
+				}
+				catch (const std::bad_any_cast&)
+				{
+					throw SerumException("Failed to cast underlying binding to FunctionBinding.");
+				}
 			}
 
 		private:

@@ -13,6 +13,7 @@
 #include "Serum/Internal/AnyBindingWrapper.hpp"
 #include "Serum/Bindings/BindingKey.hpp"
 #include "Serum/Bindings/ConstantBinding.hpp"
+#include "Serum/Bindings/FunctionBinding.hpp"
 
 namespace Serum
 {
@@ -47,8 +48,10 @@ namespace Serum
 					case Bindings::BindingType::Constant:
 						return binding.AsConstantBinding<TRequest>().Resolve();
 
-					case Bindings::BindingType::Construct:
 					case Bindings::BindingType::Function:
+						return binding.AsFunctionBinding<TRequest>().Resolve();
+
+					case Bindings::BindingType::Construct:
 					case Bindings::BindingType::Resolver:
 						throw SerumException("Currently unsupported.");
 
@@ -81,6 +84,23 @@ namespace Serum
 				auto key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromConstantBinding(binding);
+
+				return *this;
+			}
+
+			/// Binds the type to the result of a function. When the type is requested, the container will invoke
+			/// the function and return the result.
+			/// @tparam TRequest The type of the requested object.
+			/// @param function The function.
+			/// @returns This instance.
+			/// @throws SerumException If a binding of type TRequest with the given name already exists.
+			template <typename TRequest>
+			SerumContainer& BindFunction(std::function<TRequest()> function)
+			{
+				auto binding = Bindings::FunctionBinding<TRequest>(function);
+				auto key = binding.GetBindingKey();
+				this->ThrowIfBindingExists(key);
+				bindings[key] = Internal::AnyBindingWrapper::FromFunctionBinding(binding);
 
 				return *this;
 			}
