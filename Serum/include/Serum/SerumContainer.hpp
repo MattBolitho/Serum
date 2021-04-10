@@ -52,8 +52,10 @@ namespace Serum
 					case Bindings::BindingType::Function:
 						return binding.AsFunctionBinding<TRequest>().Resolve();
 
-					case Bindings::BindingType::Construct:
 					case Bindings::BindingType::Resolver:
+						return binding.AsResolverBinding<TRequest>().Resolve();
+
+					case Bindings::BindingType::Construct:
 						throw SerumException("Currently unsupported.");
 
 					case Bindings::BindingType::Unknown:
@@ -119,8 +121,9 @@ namespace Serum
 					std::is_default_constructible<TResolver>::value,
 					"Cannot bind resolver - resolver type must be default constructible. Did you mean to pass an instance?");
 
-				auto resolverInstance = std::unique_ptr<TResolver>(new TResolver);
-				auto binding = Bindings::ResolverBinding<TRequest>(resolverInstance);
+				auto resolverInstance = std::make_shared<TResolver>();
+				auto upcastResolvedInstance = std::dynamic_pointer_cast<SerumResolver<TRequest>>(resolverInstance);
+				auto binding = Bindings::ResolverBinding<TRequest>(upcastResolvedInstance);
 				auto key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);

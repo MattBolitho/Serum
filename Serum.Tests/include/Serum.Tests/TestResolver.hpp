@@ -6,7 +6,7 @@
 
 #include "Serum/SerumResolver.hpp"
 
-namespace Serum 
+namespace Serum
 {
     template <typename T>
     class TestResolver final : public SerumResolver<T>

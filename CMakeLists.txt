@@ -13,5 +13,6 @@ add_executable(Serum.Tests
 	Serum.Tests/src/Bindings/BindingKeyTests.cpp
 	Serum.Tests/src/Bindings/ConstantBindingTests.cpp
 	Serum.Tests/src/Bindings/FunctionBindingTests.cpp
+	Serum.Tests/src/Bindings/ResolverBindingTests.cpp
 	Serum.Tests/src/SerumContainerTests.cpp
 	Serum.Tests/src/Serum.Tests.cpp)

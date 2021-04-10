@@ -5,10 +5,15 @@
 #include "Serum/Bindings/ResolverBinding.hpp"
 #include "Serum.Tests/TestResolver.hpp"
 
-namespace Serum::Bindings::ResolverBindingTests 
+namespace Serum::Bindings::ResolverBindingTests
 {
-    TEST_CASE("ResolverBinding_ResolvesCorrectly") 
+    TEST_CASE("ResolverBinding_ResolvesCorrectly")
     {
+    	auto exporter = std::string();
+        auto resolver = TestResolver<std::string>();
 
+    	auto actual = resolver.Resolve();
+
+    	REQUIRE(exporter == actual);
     }
 }

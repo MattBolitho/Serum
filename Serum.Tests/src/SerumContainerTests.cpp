@@ -3,6 +3,8 @@
 
 #include "catch.hpp"
 #include "Serum/SerumContainer.hpp"
+#include "Serum.Tests/TestType.hpp"
+#include "Serum.Tests/TestResolver.hpp"
 
 namespace Serum::SerumContainerTests
 {
@@ -26,13 +28,6 @@ namespace Serum::SerumContainerTests
 
 			REQUIRE_THROWS(container.BindConstant<int>(3));
 		}
-
-		SECTION("CanBeChanined")
-		{
-			auto container = SerumContainer()
-								.BindConstant<std::string>(std::string("test"))
-								.BindConstant<double, float>(5.f);
-		}
 	}
 
 	TEST_CASE("SerumContainer_BindFunction")
@@ -55,12 +50,35 @@ namespace Serum::SerumContainerTests
 
 			REQUIRE_THROWS(container.BindFunction<int>([]() { return 7; }));
 		}
+	}
 
-		SECTION("CanBeChanined")
+	TEST_CASE("SerumContainer_BindResolver")
+	{
+		SECTION("DefaultInstance_WhenBindingDoesNotExist_CorrectlyBinds")
 		{
-			auto container = SerumContainer()
-								.BindFunction<int>([]() { return 7; })
-								.BindFunction<std::string>([&]() { return "Hello World"; });
+			auto expected = double();
+			auto container = SerumContainer();
+
+			container.BindResolver<double, TestResolver<double>>();
+
+			REQUIRE(expected == container.Get<double>());
 		}
+
+		SECTION("DefaultInstance_WhenBindingExists_Throws")
+		{
+			auto container = SerumContainer();
+
+			container.BindResolver<double, TestResolver<double>>();
+
+			REQUIRE_THROWS(container.BindResolver<double, TestResolver<double>>());
+		}
+	}
+
+	TEST_CASE("BindingMethods_CanBeChained")
+	{
+		auto container = SerumContainer()
+								.BindConstant<int>(7)
+								.BindFunction<std::string>([]() { return "Hello World"; })
+								.BindResolver<TestType, TestResolver<TestType>>();
 	}
 }

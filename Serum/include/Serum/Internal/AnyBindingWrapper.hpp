@@ -12,6 +12,7 @@
 #include "Serum/Bindings/BindingType.hpp"
 #include "Serum/Bindings/ConstantBinding.hpp"
 #include "Serum/Bindings/FunctionBinding.hpp"
+#include "Serum/Bindings/ResolverBinding.hpp"
 
 namespace Serum::Internal
 {
