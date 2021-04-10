@@ -74,6 +74,17 @@ namespace Serum
 				return bindings.size();
 			}
 
+			/// Checks whether a binding has been registered.
+			/// @tparam TRequest The type of the service to request.
+			/// @param name Optionally, the name of the binding.
+			/// @returns Whether or not a binding of the request type and name exists.
+			template <typename TRequest>
+			[[nodiscard]] bool HasBinding(const std::string& name = "") const
+			{
+				const auto key = Bindings::BindingKey(typeid(TRequest), name);
+				return bindings.find(key) != bindings.end();
+			}
+
 			/// Binds the type to a constant value. When the type is requested, the container
 			/// will return a copy of the value.
 			/// @tparam TRequest The type of the requested object.
@@ -93,7 +104,7 @@ namespace Serum
 					std::is_convertible<TRequest, TResolve>::value,
 					"Cannot bind constant - the resolution type must be convertible from the request type.");
 
-				auto binding = Bindings::ConstantBinding<TRequest>(value);
+				auto binding = Bindings::ConstantBinding<TRequest>(value, name);
 				auto key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromConstantBinding(binding);
@@ -133,7 +144,7 @@ namespace Serum
 
 				auto resolverInstance = std::make_shared<TResolver>();
 				auto upcastResolvedInstance = std::dynamic_pointer_cast<SerumResolver<TRequest>>(resolverInstance);
-				auto binding = Bindings::ResolverBinding<TRequest>(upcastResolvedInstance);
+				auto binding = Bindings::ResolverBinding<TRequest>(upcastResolvedInstance, name);
 				auto key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);

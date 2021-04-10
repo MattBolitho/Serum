@@ -21,6 +21,33 @@ namespace Serum::SerumContainerTests
 		REQUIRE(expected == actual);
 	}
 
+	TEST_CASE("SerumContainer_HasKey")
+	{
+		constexpr auto bindingName = "test-binding";
+		const auto container = SerumContainer().BindConstant<double>(1.2345, bindingName)
+											   .BindConstant<int>(4);
+
+		SECTION("WhenNamedKeyExists_ReturnsTrue")
+		{
+			REQUIRE(container.HasBinding<double>(bindingName));
+		}
+
+		SECTION("WhenNamedKeyDoesNotExist_ReturnsFalse")
+		{
+			REQUIRE_FALSE(container.HasBinding<double>());
+		}
+
+		SECTION("WhenUnamedKeyExists_ReturnsTrue")
+		{
+			REQUIRE(container.HasBinding<int>());
+		}
+
+		SECTION("WhenUnamedKeyDoesNotExist_ReturnsFalse")
+		{
+			REQUIRE_FALSE(container.HasBinding<float>());
+		}
+	}
+
 	TEST_CASE("SerumContainer_BindConstant")
 	{
 		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
