@@ -45,6 +45,16 @@ namespace Serum::Internal
 				return AnyBindingWrapper(Bindings::BindingType::Function, binding);
 			}
 
+			/// Creates an AnyBindingWrapper instance for the given resolver binding.
+			/// @tparam TRequest The type of the request.
+			/// @param binding The binding.
+			/// @returns An AnyBindingWrapper instance for the given resolver binding.
+			template <typename TRequest>
+			static AnyBindingWrapper FromResolverBinding(const Bindings::ResolverBinding<TRequest>& binding) noexcept
+			{
+				return AnyBindingWrapper(Bindings::BindingType::Resolver, binding);
+			}
+
 			/// Gets the underlying binding type.
 			/// @returns The underlying binding type.
 			[[nodiscard]] Bindings::BindingType GetBindingType() const noexcept
@@ -72,6 +82,17 @@ namespace Serum::Internal
 			{
 				VerifyBindingType(Bindings::BindingType::Function);
 				return this->CastBinding<Bindings::FunctionBinding<TRequest>>();
+			}
+
+			/// Gets the wrapped binding as a resolver binding.
+			/// @tparam TRequest The type of the request.
+			/// @returns The wrapped binding as a resolver binding.
+			/// @throws SerumException If the underlying type is not a function binding.
+			template <typename TRequest>
+			[[nodiscard]] Bindings::ResolverBinding<TRequest> AsResolverBinding() const
+			{
+				VerifyBindingType(Bindings::BindingType::Resolver);
+				return this->CastBinding<Bindings::ResolverBinding<TRequest>>();
 			}
 
 		private:

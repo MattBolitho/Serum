@@ -14,6 +14,7 @@
 #include "Serum/Bindings/BindingKey.hpp"
 #include "Serum/Bindings/ConstantBinding.hpp"
 #include "Serum/Bindings/FunctionBinding.hpp"
+#include "Serum/Bindings/ResolverBinding.hpp"
 
 namespace Serum
 {
@@ -92,15 +93,37 @@ namespace Serum
 			/// the function and return the result.
 			/// @tparam TRequest The type of the requested object.
 			/// @param function The function.
+			/// @param name Optionally, a name for the binding.
 			/// @returns This instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest>
-			SerumContainer& BindFunction(std::function<TRequest()> function)
+			SerumContainer& BindFunction(std::function<TRequest()> function, const std::string& name = "")
 			{
-				auto binding = Bindings::FunctionBinding<TRequest>(function);
+				auto binding = Bindings::FunctionBinding<TRequest>(function, name);
 				auto key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromFunctionBinding(binding);
+
+				return *this;
+			}
+
+			/// Binds the type to a resolver. When the type is requested, the return value of the given resolver's
+			/// Resolve method will be returned.
+			/// @tparam TRequest The type of the requested object.
+			/// @tparam TResolver The type of the resolver.
+			/// @param name Optionally, a name for the binding.
+			template <typename TRequest, typename TResolver>
+			SerumContainer& BindResolver(const std::string& name = "")
+			{
+				static_assert(
+					std::is_default_constructible<TResolver>::value,
+					"Cannot bind resolver - resolver type must be default constructible. Did you mean to pass an instance?");
+
+				auto resolverInstance = std::unique_ptr<TResolver>(new TResolver);
+				auto binding = Bindings::ResolverBinding<TRequest>(resolverInstance);
+				auto key = binding.GetBindingKey();
+				this->ThrowIfBindingExists(key);
+				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);
 
 				return *this;
 			}
@@ -128,7 +151,8 @@ namespace Serum
 				}
 			}
 
-			std::unordered_map<Bindings::BindingKey, Internal::AnyBindingWrapper> bindings{}; // todo store as a tagged type to allow better resolution
+			/// The bindings, keyed by binding type and name.
+			std::unordered_map<Bindings::BindingKey, Internal::AnyBindingWrapper> bindings{};
 	};
 }
 
