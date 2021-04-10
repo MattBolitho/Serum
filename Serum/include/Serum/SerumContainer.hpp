@@ -97,7 +97,7 @@ namespace Serum
 			/// @returns This instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest>
-			SerumContainer& BindFunction(std::function<TRequest()> function, const std::string& name = "")
+			SerumContainer& BindFunction(const std::function<TRequest()>& function, const std::string& name = "")
 			{
 				auto binding = Bindings::FunctionBinding<TRequest>(function, name);
 				auto key = binding.GetBindingKey();
