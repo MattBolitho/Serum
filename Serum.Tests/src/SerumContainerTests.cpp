@@ -8,6 +8,19 @@
 
 namespace Serum::SerumContainerTests
 {
+	TEST_CASE("SerumContainer_GetNumberOfBindings")
+	{
+		constexpr auto expected = 4;
+		const auto container = SerumContainer().BindConstant<std::string>(std::string("hello"))
+											   .BindConstant<int>(0)
+											   .BindConstant<float>(0.f)
+											   .BindConstant<double>(0.0);
+
+		const auto actual = container.GetNumberOfBindings();
+
+		REQUIRE(expected == actual);
+	}
+
 	TEST_CASE("SerumContainer_BindConstant")
 	{
 		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")

@@ -18,6 +18,9 @@
 
 namespace Serum
 {
+	/// The type used to store the bindings in the kernel.
+	using BindingCollection = std::unordered_map<Bindings::BindingKey, Internal::AnyBindingWrapper>;
+
 	/// Allows bindings to be registered and resolved.
 	class SerumContainer
 	{
@@ -62,6 +65,13 @@ namespace Serum
 					default:
 						throw SerumException("Could not resolve binding. Binding type was unknown or invalid.");
 				}
+			}
+
+			/// Gets the number of bindings that have been registered to the container.
+			/// @returns The number of bindings that have been registered to the container.
+			[[nodiscard]] BindingCollection::size_type GetNumberOfBindings() const noexcept
+			{
+				return bindings.size();
 			}
 
 			/// Binds the type to a constant value. When the type is requested, the container
