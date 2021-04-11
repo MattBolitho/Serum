@@ -34,6 +34,16 @@ namespace Serum::Bindings
 			/// @param key The key.
 			BindingKey& operator=(BindingKey const& key) = default;
 
+			/// Overload of the stream operator.
+			/// @param stream The stream.
+			/// @param bindingKey The binding key.
+			/// @returns The stream.
+			friend std::ostream& operator <<(std::ostream& stream, BindingKey const& bindingKey)
+			{
+				stream << "[" << bindingKey.requestType.name() << ", \"" << bindingKey.name << "\"]";
+				return stream;
+			}
+
 			/// Equality operator for binding keys.
 			/// @param otherKey The other binding key.
 			/// @returns True if the keys are the same and false otherwise.
@@ -60,16 +70,6 @@ namespace Serum::Bindings
 			std::type_index requestType;
 			std::string name;
 	};
-
-	/// Overload of the stream operator for string functionality.
-	/// @param stream The stream.
-	/// @param bindingKey The binding key.
-	/// @returns The stream.
-	inline std::ostream& operator <<(std::ostream& stream, BindingKey const& bindingKey)
-	{
-		stream << "[" << bindingKey.GetRequestType().name() << ", " << std::quoted(bindingKey.GetName()) << "]";
-		return stream;
-	}
 }
 
 namespace std
