@@ -19,8 +19,8 @@ namespace Serum::Bindings
 			/// @param value The value.
 			/// @param name Optionally, the name.
 			explicit ConstantBinding(
-				const T& value,
-				const std::string& name = "") noexcept
+				T const& value,
+				std::string const& name = "") noexcept
 				: Binding<T>(BindingType::Constant, name),
 				  value(value)
 			{

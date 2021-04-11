@@ -16,7 +16,7 @@ namespace Serum
 
             /// Copy constructor.
             /// @param resolver The resolver.
-            SerumResolver(const SerumResolver& resolver) noexcept = default;
+            SerumResolver(SerumResolver const& resolver) noexcept = default;
 
             /// Move constructor.
             /// @param resolver The resolver.
@@ -24,7 +24,7 @@ namespace Serum
 
             /// Copy assignment operator.
             /// @param resolver The resolver.
-            SerumResolver& operator=(const SerumResolver& resolver) = default;
+            SerumResolver& operator=(SerumResolver const& resolver) = default;
 
             /// Move assignment operator.
             /// @param resolver The resolver.

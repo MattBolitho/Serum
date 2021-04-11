@@ -22,7 +22,7 @@ namespace Serum::Bindings
 
 			/// Copy constructor.
 			/// @param binding The binding to copy.
-			Binding(const Binding& binding) noexcept = default;
+			Binding(Binding const& binding) noexcept = default;
 
 			/// Move constructor.
 			/// @param binding The binding to move.
@@ -33,7 +33,7 @@ namespace Serum::Bindings
 
 			/// Copy assignment operator.
 			/// @param binding The binding to copy.
-			Binding& operator=(const Binding& binding) = default;
+			Binding& operator=(Binding const& binding) = default;
 
 			/// Move assignment operator.
 			/// @param binding The binding to move.
@@ -76,8 +76,8 @@ namespace Serum::Bindings
 			/// @param bindingType The binding type.
 			/// @param name Optionally, a name for the binding.
 			explicit Binding(
-				const BindingType bindingType,
-				const std::string& name = "") noexcept
+				BindingType const bindingType,
+				std::string const& name = "") noexcept
 				: bindingType(bindingType),
 				  requestType(typeid(TRequest)),
 				  name(name)

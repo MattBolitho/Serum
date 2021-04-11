@@ -21,8 +21,8 @@ namespace Serum::Bindings
 			/// @param resolveFunction The resolve function. This function is moved.
 			/// @param name Optionally, the name.
 			explicit FunctionBinding(
-				std::function<TRequest()> resolveFunction,
-				const std::string& name = "") noexcept
+				std::function<TRequest()> const& resolveFunction,
+				std::string const& name = "") noexcept
 				: Binding<TRequest>(BindingType::Function, name),
 				  resolveFunction(std::move(resolveFunction))
 			{

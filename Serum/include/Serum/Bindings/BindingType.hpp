@@ -28,7 +28,7 @@ namespace Serum::Bindings
 	};
 
 	/// Overload of the stream operator for string functionality.
-	inline std::ostream& operator <<(std::ostream& stream, const BindingType binding)
+	inline std::ostream& operator <<(std::ostream& stream, BindingType const binding)
 	{
 		switch (binding)
 		{

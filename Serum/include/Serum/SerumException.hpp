@@ -22,7 +22,7 @@ namespace Serum
 
 			/// Initializes a new instance of the SerumException class.
 			/// @param message The message.
-			explicit SerumException(const std::string& message)
+			explicit SerumException(std::string const& message)
 				: std::runtime_error(message)
 			{
 			}

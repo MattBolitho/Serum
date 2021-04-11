@@ -19,8 +19,8 @@ namespace Serum::Bindings
 			/// @param requestType The request type.
 			/// @param name The name of the binding.
 			BindingKey(
-				const std::type_index& requestType,
-				const std::string& name) noexcept
+				std::type_index const& requestType,
+				std::string const& name) noexcept
 				: requestType(requestType),
 				  name(name)
 			{
@@ -28,16 +28,16 @@ namespace Serum::Bindings
 
 			/// Copy constructor.
 			/// @param key The key.
-			BindingKey(const BindingKey& key) = default;
+			BindingKey(BindingKey const& key) = default;
 
 			/// Copy assignment operator.
 			/// @param key The key.
-			BindingKey& operator=(const BindingKey& key) = default;
+			BindingKey& operator=(BindingKey const& key) = default;
 
 			/// Equality operator for binding keys.
 			/// @param otherKey The other binding key.
 			/// @returns True if the keys are the same and false otherwise.
-			bool operator==(const BindingKey& otherKey) const noexcept
+			bool operator==(BindingKey const& otherKey) const noexcept
 			{
 				return name == otherKey.name && requestType == otherKey.requestType;
 			}
@@ -65,7 +65,7 @@ namespace Serum::Bindings
 	/// @param stream The stream.
 	/// @param bindingKey The binding key.
 	/// @returns The stream.
-	inline std::ostream& operator <<(std::ostream& stream, const BindingKey& bindingKey)
+	inline std::ostream& operator <<(std::ostream& stream, BindingKey const& bindingKey)
 	{
 		stream << "[" << bindingKey.GetRequestType().name() << ", " << std::quoted(bindingKey.GetName()) << "]";
 		return stream;
@@ -81,7 +81,7 @@ namespace std
 	template <>
 	struct hash<Serum::Bindings::BindingKey>
 	{
-		std::size_t operator()(const Serum::Bindings::BindingKey& key) const noexcept
+		std::size_t operator()(Serum::Bindings::BindingKey const& key) const noexcept
 		{
 			return std::hash<std::string>{}(key.GetName()) ^ std::hash<std::type_index>{}(key.GetRequestType());
 		}

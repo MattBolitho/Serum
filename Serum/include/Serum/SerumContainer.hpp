@@ -34,10 +34,10 @@ namespace Serum
 			/// @returns The resolved service.
 			/// @throws SerumException If no matching bindings exist.
 			template <typename TRequest>
-			[[nodiscard]] TRequest Get(const std::string& name = "") const
+			[[nodiscard]] TRequest Get(std::string const& name = "") const
 			{
-				const auto key = Bindings::BindingKey(typeid(TRequest), name);
-				const auto optionalBinding = GetBinding(key);
+				auto const key = Bindings::BindingKey(typeid(TRequest), name);
+				auto const optionalBinding = GetBinding(key);
 
 				if (!optionalBinding.has_value())
 				{
@@ -46,7 +46,7 @@ namespace Serum
 					throw SerumException(errorMessageStream.str());
 				}
 
-				const auto& binding = optionalBinding.value();
+				auto& binding = optionalBinding.value();
 				switch (binding.GetBindingType())
 				{
 					case Bindings::BindingType::Constant:
@@ -79,9 +79,9 @@ namespace Serum
 			/// @param name Optionally, the name of the binding.
 			/// @returns Whether or not a binding of the request type and name exists.
 			template <typename TRequest>
-			[[nodiscard]] bool HasBinding(const std::string& name = "") const
+			[[nodiscard]] bool HasBinding(std::string const& name = "") const
 			{
-				const auto key = Bindings::BindingKey(typeid(TRequest), name);
+				auto const key = Bindings::BindingKey(typeid(TRequest), name);
 				return bindings.find(key) != bindings.end();
 			}
 
@@ -94,7 +94,7 @@ namespace Serum
 			/// @returns This instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest, typename TResolve = TRequest>
-			SerumContainer& BindConstant(const TResolve& value, const std::string& name = "")
+			SerumContainer& BindConstant(TResolve const& value, std::string const& name = "")
 			{
 				static_assert(
 					std::is_copy_assignable<TResolve>::value,
@@ -104,8 +104,8 @@ namespace Serum
 					std::is_convertible<TRequest, TResolve>::value,
 					"Cannot bind constant - the resolution type must be convertible from the request type.");
 
-				auto binding = Bindings::ConstantBinding<TRequest>(value, name);
-				auto key = binding.GetBindingKey();
+				auto const binding = Bindings::ConstantBinding<TRequest>(value, name);
+				auto const key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromConstantBinding(binding);
 
@@ -120,10 +120,10 @@ namespace Serum
 			/// @returns This instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest>
-			SerumContainer& BindFunction(const std::function<TRequest()>& function, const std::string& name = "")
+			SerumContainer& BindFunction(std::function<TRequest()> const& function, std::string const& name = "")
 			{
-				auto binding = Bindings::FunctionBinding<TRequest>(function, name);
-				auto key = binding.GetBindingKey();
+				auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
+				auto const key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromFunctionBinding(binding);
 
@@ -136,16 +136,16 @@ namespace Serum
 			/// @tparam TResolver The type of the resolver.
 			/// @param name Optionally, a name for the binding.
 			template <typename TRequest, typename TResolver>
-			SerumContainer& BindResolver(const std::string& name = "")
+			SerumContainer& BindResolver(std::string const& name = "")
 			{
 				static_assert(
 					std::is_default_constructible<TResolver>::value,
 					"Cannot bind resolver - resolver type must be default constructible. Did you mean to pass an instance?");
 
 				auto resolverInstance = std::make_shared<TResolver>();
-				auto upcastResolvedInstance = std::dynamic_pointer_cast<SerumResolver<TRequest>>(resolverInstance);
-				auto binding = Bindings::ResolverBinding<TRequest>(upcastResolvedInstance, name);
-				auto key = binding.GetBindingKey();
+				auto const upcastResolvedInstance = std::dynamic_pointer_cast<SerumResolver<TRequest>>(resolverInstance);
+				auto const binding = Bindings::ResolverBinding<TRequest>(upcastResolvedInstance, name);
+				auto const key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);
 
@@ -153,18 +153,18 @@ namespace Serum
 			}
 
 		private:
-			[[nodiscard]] std::optional<Internal::AnyBindingWrapper> GetBinding(const Bindings::BindingKey& key) const
+			[[nodiscard]] std::optional<Internal::AnyBindingWrapper> GetBinding(Bindings::BindingKey const& key) const
 			{
-				const auto iterator = bindings.find(key);
+				auto const iterator = bindings.find(key);
 
 				return iterator == bindings.end()
 					? std::nullopt
 					: std::optional<Internal::AnyBindingWrapper>(iterator->second);
 			}
 
-			void ThrowIfBindingExists(const Bindings::BindingKey& key) const
+			void ThrowIfBindingExists(Bindings::BindingKey const& key) const
 			{
-				const auto existingBinding = GetBinding(key);
+				auto const existingBinding = GetBinding(key);
 
 				if (existingBinding.has_value())
 				{

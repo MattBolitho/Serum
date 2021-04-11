@@ -31,7 +31,7 @@ namespace Serum::Internal
 			/// @param binding The binding.
 			/// @returns An AnyBindingWrapper instance for the given constant binding.
 			template <typename TRequest>
-			static AnyBindingWrapper FromConstantBinding(const Bindings::ConstantBinding<TRequest>& binding) noexcept
+			static AnyBindingWrapper FromConstantBinding(Bindings::ConstantBinding<TRequest>const& binding) noexcept
 			{
 				return AnyBindingWrapper(Bindings::BindingType::Constant, binding);
 			}
@@ -41,7 +41,7 @@ namespace Serum::Internal
 			/// @param binding The binding.
 			/// @returns An AnyBindingWrapper instance for the given function binding.
 			template <typename TRequest>
-			static AnyBindingWrapper FromFunctionBinding(const Bindings::FunctionBinding<TRequest>& binding) noexcept
+			static AnyBindingWrapper FromFunctionBinding(Bindings::FunctionBinding<TRequest> const& binding) noexcept
 			{
 				return AnyBindingWrapper(Bindings::BindingType::Function, binding);
 			}
@@ -51,7 +51,7 @@ namespace Serum::Internal
 			/// @param binding The binding.
 			/// @returns An AnyBindingWrapper instance for the given resolver binding.
 			template <typename TRequest>
-			static AnyBindingWrapper FromResolverBinding(const Bindings::ResolverBinding<TRequest>& binding) noexcept
+			static AnyBindingWrapper FromResolverBinding(Bindings::ResolverBinding<TRequest> const& binding) noexcept
 			{
 				return AnyBindingWrapper(Bindings::BindingType::Resolver, binding);
 			}
@@ -124,7 +124,7 @@ namespace Serum::Internal
 				{
 					return std::any_cast<TBinding>(binding);
 				}
-				catch (const std::bad_any_cast&)
+				catch (std::bad_any_cast const&)
 				{
 					throw SerumException("Failed to cast underlying binding.");
 				}
