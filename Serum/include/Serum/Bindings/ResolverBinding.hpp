@@ -22,10 +22,10 @@ namespace Serum::Bindings
             /// @param resolverPointer A pointer to the resolver to use.
             /// @param name Optionally, a name for the binding.
             explicit ResolverBinding(
-                std::shared_ptr<SerumResolver<TRequest>>const& resolverPointer,
+	            std::shared_ptr<SerumResolver<TRequest>> resolverPointer,
                 std::string const& name = "") noexcept
                 : Binding<TRequest>(BindingType::Resolver, name),
-                  resolver(resolverPointer)
+                  resolver(std::move(resolverPointer))
             {
             }
 

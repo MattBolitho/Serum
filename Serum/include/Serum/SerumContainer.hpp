@@ -46,7 +46,7 @@ namespace Serum
 					throw SerumException(errorMessageStream.str());
 				}
 
-				auto& binding = optionalBinding.value();
+				const auto& binding = optionalBinding.value();
 				switch (binding.GetBindingType())
 				{
 					case Bindings::BindingType::Constant:
@@ -135,21 +135,46 @@ namespace Serum
 			/// @tparam TRequest The type of the requested object.
 			/// @tparam TResolver The type of the resolver.
 			/// @param name Optionally, a name for the binding.
+			/// @returns This instance.
+			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest, typename TResolver>
 			SerumContainer& BindResolver(std::string const& name = "")
 			{
 				static_assert(
+					std::is_convertible<std::shared_ptr<TResolver>, std::shared_ptr<SerumResolver<TRequest>>>::value,
+					"Cannot bind resolver - TResolver is not convertible to SerumResolver.");
+
+				static_assert(
 					std::is_default_constructible<TResolver>::value,
-					"Cannot bind resolver - resolver type must be default constructible. Did you mean to pass an instance?");
+					"Cannot bind resolver - resolver type must be default constructible. Did you mean to pass a SerumResolver instance?");
 
-				auto resolverInstance = std::make_shared<TResolver>();
-				auto const upcastResolvedInstance = std::dynamic_pointer_cast<SerumResolver<TRequest>>(resolverInstance);
-				auto const binding = Bindings::ResolverBinding<TRequest>(upcastResolvedInstance, name);
-				auto const key = binding.GetBindingKey();
-				this->ThrowIfBindingExists(key);
-				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);
+				auto const resolver = std::make_shared<TResolver>();
 
-				return *this;
+				return this->BindResolverCore<TRequest>(resolver, name);
+			}
+
+			/// Binds the type to a resolver. When the type is requested, the return value of the given resolver's
+			/// Resolve method will be returned.
+			/// @tparam TRequest The type of the requested object.
+			/// @tparam TResolver The type of the resolver.
+			/// @param resolverInstance The resolver instance.
+			/// @param name Optionally, a name for the binding.
+			/// @returns This instance.
+			/// @throws SerumException If a binding of type TRequest with the given name already exists.
+			template <typename TRequest, typename TResolver>
+			SerumContainer& BindResolver(TResolver const& resolverInstance, std::string const& name = "")
+			{
+				static_assert(
+					std::is_convertible<std::shared_ptr<TResolver>, std::shared_ptr<SerumResolver<TRequest>>>::value,
+					"Cannot bind resolver - TResolver is not convertible to SerumResolver.");
+
+				static_assert(
+					std::is_copy_constructible<TResolver>::value,
+					"Cannot bind resolver - type of resolver instance is not copy constructible.");
+
+				auto const resolver = std::make_shared<TResolver>(resolverInstance);
+
+				return this->BindResolverCore<TRequest>(resolver, name);
 			}
 
 		private:
@@ -173,6 +198,17 @@ namespace Serum
 
 					throw SerumException(errorMessage.str());
 				}
+			}
+
+			template <typename TRequest, typename TResolver>
+			SerumContainer& BindResolverCore(std::shared_ptr<TResolver> const& resolver, std::string const& name)
+			{
+				auto const binding = Bindings::ResolverBinding<TRequest>(resolver, name);
+				auto const key = binding.GetBindingKey();
+				this->ThrowIfBindingExists(key);
+				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);
+
+				return *this;
 			}
 
 			/// The bindings, keyed by binding type and name.

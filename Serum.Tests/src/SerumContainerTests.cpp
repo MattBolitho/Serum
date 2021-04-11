@@ -112,6 +112,28 @@ namespace Serum::SerumContainerTests
 
 			REQUIRE_THROWS(container.BindResolver<double, TestResolver<double>>());
 		}
+
+		SECTION("WithInstance_WhenBindingDoesNotExist_CorrectlyBinds")
+		{
+			constexpr auto expected = "test-value";
+			auto resolver = TestResolver<std::string>(expected);
+			auto container = SerumContainer();
+
+			container.BindResolver<std::string>(resolver);
+
+			REQUIRE(expected == container.Get<std::string>());
+		}
+
+		SECTION("WithInstance_WhenBindingExists_Throws")
+		{
+			constexpr auto expected = "test-value";
+			auto resolver = TestResolver<std::string>(expected);
+			auto container = SerumContainer();
+
+			container.BindResolver<std::string>(resolver);
+
+			REQUIRE_THROWS(container.BindResolver<std::string>(resolver));
+		}
 	}
 
 	TEST_CASE("BindingMethods_CanBeChained")
@@ -120,5 +142,7 @@ namespace Serum::SerumContainerTests
 								.BindConstant<int>(7)
 								.BindFunction<std::string>([]() { return "Hello World"; })
 								.BindResolver<TestType, TestResolver<TestType>>();
+
+		REQUIRE(3 == container.GetNumberOfBindings());
 	}
 }
