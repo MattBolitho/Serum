@@ -22,10 +22,11 @@ namespace Serum::Bindings
             /// Creates a ConstructorBinding instance using TRequest's default constructor.
             /// @param name Optionally, the name of the binding.
             /// @returns A ConstructorBinding instance using TRequest's default constructor.
+            template <typename TResolve>
             static ConstructorBinding<TRequest> FromDefaultConstructor(std::string const& name = "")
             {
                 return ConstructorBinding<TRequest>(
-                    [](){ return TRequest(); },
+                    [](){ return TResolve(); },
                     name);
             }
 
