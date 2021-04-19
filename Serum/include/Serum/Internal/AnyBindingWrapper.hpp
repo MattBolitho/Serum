@@ -107,12 +107,12 @@ namespace Serum::Internal
 				return this->CastBinding<Bindings::ResolverBinding<TRequest>>();
 			}
 
-			/// Gets the wrapped binding as a comstructor binding.
+			/// Gets the wrapped binding as a constructor binding.
 			/// @tparam TRequest The type of the request.
 			/// @returns The wrapped binding as a constructor binding.
 			/// @throws SerumException If the underlying type is not a constructor binding.
 			template <typename TRequest>
-			[[nodiscard]] Bindings::ResolverBinding<TRequest> AsConstructorBinding() const
+			[[nodiscard]] Bindings::ConstructorBinding<TRequest> AsConstructorBinding() const
 			{
 				VerifyBindingType(Bindings::BindingType::Construct);
 				return this->CastBinding<Bindings::ConstructorBinding<TRequest>>();

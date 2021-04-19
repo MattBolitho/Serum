@@ -136,13 +136,35 @@ namespace Serum::SerumContainerTests
 		}
 	}
 
-	TEST_CASE("BindingMethods_CanBeChained")
+	TEST_CASE("SerumContainer_BindToSelf")
+	{
+		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
+		{
+			auto container = SerumContainer();
+
+			container.BindToSelf<TestType>();
+
+			REQUIRE(TestType() == container.Get<TestType>());
+		}
+
+		SECTION("WhenBindingExists_Throws")
+		{
+			auto container = SerumContainer();
+
+			container.BindToSelf<TestType>();
+
+			REQUIRE_THROWS(container.BindToSelf<TestType>());
+		}
+	}
+
+	TEST_CASE("SerumContainer_BindingMethods_CanBeChained")
 	{
 		auto container = SerumContainer()
 								.BindConstant<int>(7)
 								.BindFunction<std::string>([]() { return "Hello World"; })
-								.BindResolver<TestType, TestResolver<TestType>>();
+								.BindResolver<TestType, TestResolver<TestType>>()
+								.BindToSelf<TestType>("self-binding");
 
-		REQUIRE(3 == container.GetNumberOfBindings());
+		REQUIRE(4 == container.GetNumberOfBindings());
 	}
 }

@@ -5,16 +5,13 @@
 #define SERUM_SERUM_CONTAINER_HPP
 
 #include <sstream>
+#include <memory>
 #include <unordered_map>
 #include <any>
 #include <type_traits>
 #include <optional>
 #include "Serum/SerumException.hpp"
 #include "Serum/Internal/AnyBindingWrapper.hpp"
-#include "Serum/Bindings/BindingKey.hpp"
-#include "Serum/Bindings/ConstantBinding.hpp"
-#include "Serum/Bindings/FunctionBinding.hpp"
-#include "Serum/Bindings/ResolverBinding.hpp"
 
 namespace Serum
 {
@@ -59,7 +56,7 @@ namespace Serum
 						return binding.AsResolverBinding<TRequest>().Resolve();
 
 					case Bindings::BindingType::Construct:
-						throw SerumException("Currently unsupported.");
+						return binding.AsConstructorBinding<TRequest>().Resolve();
 
 					case Bindings::BindingType::Unknown:
 					default:
@@ -177,21 +174,19 @@ namespace Serum
 				return this->BindResolverCore<TRequest>(resolver, name);
 			}
 
-			/// Binds the request type to he resolution type. When the type is requested, an instance of the
-			/// resolution type is returned.
-			/// @tparam TRequest The type of the requested object.
-			/// @tparam TResolve The type of the instance to resolve. This must be convertible from TRequest.
+			/// Binds the type to itself. When the type is requested, the resolver will return a new default instance
+			/// of the given type.
 			/// @param name Optionally, a name for the binding.
 			/// @returns This instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
-			template <typename TRequest, typename TResolve = TRequest>
-			auto& Bind(std::string const& name = "") 
+			template <typename TRequest>
+			auto& BindToSelf(std::string const& name = "")
 			{
 				static_assert(
-					std::is_convertible<TRequest, TResolve>::value,
-					"Cannot bind - the resolution type must be convertible from the request type.");
+					std::is_default_constructible<TRequest>::value,
+					"Could not bind type to self - Type must be default constructible.");
 
-				auto const binding = Bindings::ConstructorBinding<TRequest>::FromDefaultConstructor<TResolve>(name);
+				auto const binding = Bindings::ConstructorBinding<TRequest>::template FromDefaultConstructor<TRequest>(name);
 				auto const key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
 				bindings[key] = Internal::AnyBindingWrapper::FromConstructorBinding(binding);
@@ -233,8 +228,18 @@ namespace Serum
 				return *this;
 			}
 
-			/// The bindings, keyed by binding type and name.
-			std::unordered_map<Bindings::BindingKey, Internal::AnyBindingWrapper> bindings{};
+			template <typename Wrapper, typename TBinding>
+			auto& BindCore(TBinding const& binding, std::string const& name)
+			{
+				auto const key = binding.GetBindingKey();
+				this->ThrowIfBindingExists(key);
+				bindings[key] = Wrapper(binding);
+
+				return *this;
+			}
+
+			/// Stores the bindings.
+			BindingCollection bindings{};
 	};
 }
 

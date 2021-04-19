@@ -6,9 +6,10 @@
 
 #include <string>
 #include <functional>
+#include <utility>
 #include "Serum/Bindings/Binding.hpp"
 
-namespace Serum::Bindings 
+namespace Serum::Bindings
 {
     /// A binding that resolves requests recursively using constrctors.
     /// @tparam TRequest The type of the requested object.
@@ -16,8 +17,16 @@ namespace Serum::Bindings
     class ConstructorBinding final : public Binding<TRequest>
     {
         public:
-            /// Deleted default constructor - use FromDefaultConstructor instead.
-            ConstructorBinding() = delete;
+            /// Initializes a new instance of the ConstructorBinding class.
+            /// @param constructFunction
+            /// @param name
+            explicit ConstructorBinding(
+	            std::function<TRequest()> constructFunction,
+                std::string const& name = "")
+                : Binding<TRequest>(BindingType::Construct, name),
+                  constructFunction(std::move(constructFunction))
+            {
+            }
 
             /// Creates a ConstructorBinding instance using TRequest's default constructor.
             /// @param name Optionally, the name of the binding.
@@ -36,13 +45,6 @@ namespace Serum::Bindings
             }
 
         private:
-            ConstructorBinding(
-                std::function<TRequest()> const& constructFunction,
-                std::string const& name = "")
-                : Binding<TRequest>(BindingType::Construct, name),
-                  constructFunction(constructFunction)
-            {
-            }
 
             std::function<TRequest()> constructFunction;
     };

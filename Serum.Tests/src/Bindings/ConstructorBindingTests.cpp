@@ -10,7 +10,7 @@ namespace Serum::Bindings::ConstructorBindingTests
     TEST_CASE("ConstructorBinding_ResolvesCorrectly")
     {
         auto expected = TestType();
-        auto binding = ConstructorBinding<TestType>::FromDefaultConstructor();
+        auto binding = ConstructorBinding<TestType>::FromDefaultConstructor<TestType>();
 
         auto actual = binding.Resolve();
 
