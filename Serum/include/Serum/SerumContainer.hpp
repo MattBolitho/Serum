@@ -102,11 +102,8 @@ namespace Serum
 					"Cannot bind constant - the resolution type must be convertible from the request type.");
 
 				auto const binding = Bindings::ConstantBinding<TRequest>(value, name);
-				auto const key = binding.GetBindingKey();
-				this->ThrowIfBindingExists(key);
-				bindings[key] = Internal::AnyBindingWrapper::FromConstantBinding(binding);
 
-				return *this;
+				return this->BindCore(binding, name);
 			}
 
 			/// Binds the type to the result of a function. When the type is requested, the container will invoke
@@ -120,11 +117,8 @@ namespace Serum
 			auto& BindFunction(std::function<TRequest()> const& function, std::string const& name = "")
 			{
 				auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
-				auto const key = binding.GetBindingKey();
-				this->ThrowIfBindingExists(key);
-				bindings[key] = Internal::AnyBindingWrapper::FromFunctionBinding(binding);
 
-				return *this;
+				return this->BindCore(binding, name);
 			}
 
 			/// Binds the type to a resolver. When the type is requested, the return value of the given resolver's
@@ -146,8 +140,9 @@ namespace Serum
 					"Cannot bind resolver - resolver type must be default constructible. Did you mean to pass a SerumResolver instance?");
 
 				auto const resolver = std::make_shared<TResolver>();
+				auto const binding = Bindings::ResolverBinding<TRequest>(resolver, name);
 
-				return this->BindResolverCore<TRequest>(resolver, name);
+				return this->BindCore(binding, name);
 			}
 
 			/// Binds the type to a resolver. When the type is requested, the return value of the given resolver's
@@ -170,8 +165,9 @@ namespace Serum
 					"Cannot bind resolver - type of resolver instance is not copy constructible.");
 
 				auto const resolver = std::make_shared<TResolver>(resolverInstance);
+				auto const binding = Bindings::ResolverBinding<TRequest>(resolver, name);
 
-				return this->BindResolverCore<TRequest>(resolver, name);
+				return this->BindCore(binding, name);
 			}
 
 			/// Binds the type to itself. When the type is requested, the resolver will return a new default instance
@@ -187,11 +183,8 @@ namespace Serum
 					"Could not bind type to self - Type must be default constructible.");
 
 				auto const binding = Bindings::ConstructorBinding<TRequest>::template FromDefaultConstructor<TRequest>(name);
-				auto const key = binding.GetBindingKey();
-				this->ThrowIfBindingExists(key);
-				bindings[key] = Internal::AnyBindingWrapper::FromConstructorBinding(binding);
 
-				return *this;
+				return this->BindCore(binding, name);
 			}
 
 		private:
@@ -217,23 +210,12 @@ namespace Serum
 				}
 			}
 
-			template <typename TRequest, typename TResolver>
-			auto& BindResolverCore(std::shared_ptr<TResolver> const& resolver, std::string const& name)
-			{
-				auto const binding = Bindings::ResolverBinding<TRequest>(resolver, name);
-				auto const key = binding.GetBindingKey();
-				this->ThrowIfBindingExists(key);
-				bindings[key] = Internal::AnyBindingWrapper::FromResolverBinding(binding);
-
-				return *this;
-			}
-
-			template <typename Wrapper, typename TBinding>
+			template <typename TBinding>
 			auto& BindCore(TBinding const& binding, std::string const& name)
 			{
 				auto const key = binding.GetBindingKey();
 				this->ThrowIfBindingExists(key);
-				bindings[key] = Wrapper(binding);
+				bindings[key] = Internal::AnyBindingWrapper(binding);
 
 				return *this;
 			}

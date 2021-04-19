@@ -27,6 +27,42 @@ namespace Serum::Internal
 			{
 			}
 
+			/// Initializes a new instance of the AnyBindingWrapper type.
+			/// @param constructorBinding The constructor binding.
+			template <typename TRequest>
+			explicit AnyBindingWrapper(Bindings::ConstructorBinding<TRequest> const& constructorBinding) noexcept
+				: bindingType(Bindings::BindingType::Construct),
+				  binding(std::any(constructorBinding))
+			{
+			}
+
+			/// Initializes a new instance of the AnyBindingWrapper type.
+			/// @param functionBinding The function binding.
+			template <typename TRequest>
+			explicit AnyBindingWrapper(Bindings::FunctionBinding<TRequest> const& functionBinding) noexcept
+				: bindingType(Bindings::BindingType::Function),
+				  binding(std::any(functionBinding))
+			{
+			}
+
+			/// Initializes a new instance of the AnyBindingWrapper type.
+			/// @param constantBinding The constant binding.
+			template <typename TRequest>
+			explicit AnyBindingWrapper(Bindings::ConstantBinding<TRequest> const& constantBinding) noexcept
+				: bindingType(Bindings::BindingType::Constant),
+				  binding(std::any(constantBinding))
+			{
+			}
+
+			/// Initializes a new instance of the AnyBindingWrapper type.
+			/// @param resolverBinding The resolver binding.
+			template <typename TRequest>
+			explicit AnyBindingWrapper(Bindings::ResolverBinding<TRequest> const& resolverBinding) noexcept
+				: bindingType(Bindings::BindingType::Resolver),
+				  binding(std::any(resolverBinding))
+			{
+			}
+
 			/// Creates an AnyBindingWrapper instance for the given constant binding.
 			/// @tparam TRequest The type of the request.
 			/// @param binding The binding.
