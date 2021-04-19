@@ -29,7 +29,8 @@ int main()
 
     container.BindConstant<MyConfigType>(config)
              .BindResolver<MyService, MyServiceResolver>()
-             .BindResolver<MyService, MyServiceResolver>(serviceResolver, "special-case");
+             .BindResolver<MyService, MyServiceResolver>(serviceResolver, "special-case")
+             .BindToSelf<MyOtherService>();
 
     // Returns value of 'config'.
     auto resolvedConfig = container.Get<MyConfigType>();
@@ -39,6 +40,9 @@ int main()
 
     // Returns MyService instance from 'serviceResolver' if the request has name "special-case".
     auto specialResolvedService = container.Get<MyService>("special-case");
+
+    // Returns the default instance of MyOtherService.
+    auto otherService = container.Get<MyOtherService>();
 
     return 0;
 }
