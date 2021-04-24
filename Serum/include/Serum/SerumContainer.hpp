@@ -88,7 +88,7 @@ namespace Serum
 			/// @tparam TResolve The type of the constant to resolve. This must be convertible from TRequest.
 			/// @param value The value to return.
 			/// @param name Optionally, a name for the binding.
-			/// @returns This instance.
+			/// @returns The container instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest, typename TResolve = TRequest>
 			auto& BindConstant(TResolve const& value, std::string const& name = "")
@@ -111,7 +111,7 @@ namespace Serum
 			/// @tparam TRequest The type of the requested object.
 			/// @param function The function.
 			/// @param name Optionally, a name for the binding.
-			/// @returns This instance.
+			/// @returns The container instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest>
 			auto& BindFunction(std::function<TRequest()> const& function, std::string const& name = "")
@@ -126,7 +126,7 @@ namespace Serum
 			/// @tparam TRequest The type of the requested object.
 			/// @tparam TResolver The type of the resolver.
 			/// @param name Optionally, a name for the binding.
-			/// @returns This instance.
+			/// @returns The container instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest, typename TResolver>
 			auto& BindResolver(std::string const& name = "")
@@ -151,7 +151,7 @@ namespace Serum
 			/// @tparam TResolver The type of the resolver.
 			/// @param resolverInstance The resolver instance.
 			/// @param name Optionally, a name for the binding.
-			/// @returns This instance.
+			/// @returns The container instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest, typename TResolver>
 			auto& BindResolver(TResolver const& resolverInstance, std::string const& name = "")
@@ -173,7 +173,7 @@ namespace Serum
 			/// Binds the type to itself. When the type is requested, the resolver will return a new default instance
 			/// of the given type.
 			/// @param name Optionally, a name for the binding.
-			/// @returns This instance.
+			/// @returns The container instance.
 			/// @throws SerumException If a binding of type TRequest with the given name already exists.
 			template <typename TRequest>
 			auto& BindToSelf(std::string const& name = "")
@@ -183,6 +183,47 @@ namespace Serum
 					"Could not bind type to self - Type must be default constructible.");
 
 				auto const binding = Bindings::ConstructorBinding<TRequest>::template FromDefaultConstructor<TRequest>(name);
+
+				return this->BindCore(binding, name);
+			}
+
+			/// Binds the type to a raw pointer. When the type is requested, the container will construct a new heap-allocated
+			/// instance of the resolution type and return it. The container does not manage the allocated pointer - this must
+			/// later be deleted by the consumer.
+			/// @tparam TRequest The type of the requested object.
+			/// @tparam TResolve The type of the constant to resolve. This must be convertible from TRequest.
+			/// @param name Optionally, a name for the binding.
+			/// @returns The container instance.
+			/// @throws SerumException If a binding of type TRequest with the given name already exists.
+			template <typename TRequest, typename TResolve = TRequest>
+			auto& BindRawPointer(std::string const& name = "")
+			{
+				static_assert(
+					std::is_convertible<TResolve*, TRequest*>::value,
+					"Could not bind pointer - The resolution pointer type is not convertible to the request pointer type.");
+
+				auto const function = [](){ return new TResolve; };
+				auto const binding = Bindings::FunctionBinding<TRequest*>(function, name);
+
+				return this->BindCore(binding, name);
+			}
+
+			/// Binds the type to a std::shared_ptr instance. When the type is requested, the container will make a shared pointer
+			/// of the resolution type and return it.
+			/// @tparam TRequest The type of the requested object.
+			/// @tparam TResolve The type of the constant to resolve. This must be convertible from TRequest.
+			/// @param name Optionally, a name for the binding.
+			/// @returns The container instance.
+			/// @throws SerumException If a binding of type TRequest with the given name already exists.
+			template <typename TRequest, typename TResolve = TRequest>
+			auto& BindSharedPointer(std::string const& name = "")
+			{
+				static_assert(
+					std::is_convertible<std::shared_ptr<TResolve>, std::shared_ptr<TRequest>>::value,
+					"Could not bind shared pointer - The resolution pointer type is not convertible to the request pointer type.");
+
+				auto const function = [](){ return std::make_shared<TResolve>(); };
+				auto const binding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
 
 				return this->BindCore(binding, name);
 			}

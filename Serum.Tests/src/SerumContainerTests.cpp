@@ -157,14 +157,61 @@ namespace Serum::SerumContainerTests
 		}
 	}
 
+	TEST_CASE("SerumContainer_BindRawPointer")
+	{
+		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
+		{
+			auto container = SerumContainer();
+
+			container.BindRawPointer<TestType>();
+
+			auto resolvedPointer = container.Get<TestType*>();
+			CHECK(TestType() == *resolvedPointer);
+			delete resolvedPointer;
+		}
+
+		SECTION("WhenBindingExists_Throws")
+		{
+			auto container = SerumContainer();
+
+			container.BindRawPointer<TestType>();
+
+			REQUIRE_THROWS(container.BindRawPointer<TestType>());
+		}
+	}
+
+	TEST_CASE("SerumContainer_BindSharedPointer")
+	{
+		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
+		{
+			auto container = SerumContainer();
+
+			container.BindSharedPointer<TestType>();
+
+			auto resolvedPointer = container.Get<std::shared_ptr<TestType>>();
+			REQUIRE(TestType() == *resolvedPointer);
+		}
+
+		SECTION("WhenBindingExists_Throws")
+		{
+			auto container = SerumContainer();
+
+			container.BindSharedPointer<TestType>();
+
+			REQUIRE_THROWS(container.BindSharedPointer<TestType>());
+		}
+	}
+
 	TEST_CASE("SerumContainer_BindingMethods_CanBeChained")
 	{
 		auto container = SerumContainer()
 								.BindConstant<int>(7)
 								.BindFunction<std::string>([]() { return "Hello World"; })
 								.BindResolver<TestType, TestResolver<TestType>>()
-								.BindToSelf<TestType>("self-binding");
+								.BindToSelf<TestType>("self-binding")
+								.BindRawPointer<double>()
+								.BindSharedPointer<float>();
 
-		REQUIRE(4 == container.GetNumberOfBindings());
+		REQUIRE(6 == container.GetNumberOfBindings());
 	}
 }
