@@ -10,6 +10,7 @@ include_directories(Serum.Tests/include)
 
 add_executable(Serum.Tests
 	Serum.Tests/src/SerumExceptionTests.cpp
+	Serum.Tests/src/Internal/TypeTraitsTests.cpp
 	Serum.Tests/src/Bindings/BindingKeyTests.cpp
 	Serum.Tests/src/Bindings/ConstantBindingTests.cpp
 	Serum.Tests/src/Bindings/FunctionBindingTests.cpp

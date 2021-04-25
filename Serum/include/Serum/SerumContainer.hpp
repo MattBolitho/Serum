@@ -12,6 +12,7 @@
 #include <optional>
 #include "Serum/SerumException.hpp"
 #include "Serum/Internal/AnyBindingWrapper.hpp"
+#include "Serum/Internal/TypeTraits.hpp"
 
 namespace Serum
 {
@@ -182,7 +183,8 @@ namespace Serum
 					std::is_default_constructible<TRequest>::value,
 					"Could not bind type to self - Type must be default constructible.");
 
-				auto const binding = Bindings::ConstructorBinding<TRequest>::template FromDefaultConstructor<TRequest>(name);
+				auto const function = [](){ return TRequest(); };
+				auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
 
 				return this->BindCore(binding, name);
 			}
