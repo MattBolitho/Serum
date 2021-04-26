@@ -1,4 +1,9 @@
 # Serum
+<div style="display: inline;">
+<img src="https://img.shields.io/badge/version-0.2-blue"/>
+<img src="https://img.shields.io/badge/license-MIT-brightgreen"/>
+</div>
+
 Serum is a header-only dependency injection library for C++17 that allows you to bind and resolve dependencies at runtime.
 
 ## Getting Started
