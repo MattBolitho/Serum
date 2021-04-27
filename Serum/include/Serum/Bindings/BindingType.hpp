@@ -14,12 +14,6 @@ namespace Serum::Bindings
 		/// An unknown binding type.
 		Unknown,
 
-		/// The types are bound such that the container constructs the instance.
-		Construct,
-
-		/// The type is bound such that a constant value is always resolved.
-		Constant,
-
 		/// The type is bound to a function which resolves the instance.
 		Function,
 
@@ -34,14 +28,6 @@ namespace Serum::Bindings
 		{
 			case BindingType::Unknown:
 				stream << "Unknown";
-				break;
-
-			case BindingType::Construct:
-				stream << "Construct";
-				break;
-
-			case BindingType::Constant:
-				stream << "Constant";
 				break;
 
 			case BindingType::Function:
