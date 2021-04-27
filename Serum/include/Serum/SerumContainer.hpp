@@ -13,6 +13,7 @@
 #include "Serum/SerumException.hpp"
 #include "Serum/Internal/AnyBindingWrapper.hpp"
 #include "Serum/Internal/TypeTraits.hpp"
+#include "Serum/Bindings/BindingKey.hpp"
 
 namespace Serum
 {
