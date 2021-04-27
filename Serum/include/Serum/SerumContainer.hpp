@@ -47,9 +47,6 @@ namespace Serum
 				const auto& binding = optionalBinding.value();
 				switch (binding.GetBindingType())
 				{
-					case Bindings::BindingType::Constant:
-						return binding.AsConstantBinding<TRequest>().Resolve();
-
 					case Bindings::BindingType::Function:
 						return binding.AsFunctionBinding<TRequest>().Resolve();
 
@@ -99,7 +96,8 @@ namespace Serum
 					std::is_convertible<TRequest, TResolve>::value,
 					"Cannot bind constant - the resolution type must be convertible from the request type.");
 
-				auto const binding = Bindings::ConstantBinding<TRequest>(value, name);
+				auto function = [value]() { return value; };
+				auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
 
 				return this->BindCore(binding, name);
 			}

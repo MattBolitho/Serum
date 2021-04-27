@@ -6,8 +6,6 @@
 
 #include "Serum/SerumException.hpp"
 #include "Serum/SerumResolver.hpp"
-#include "Serum/Bindings/Binding.hpp"
-#include "Serum/Bindings/ConstantBinding.hpp"
 #include "Serum/SerumContainer.hpp"
 
 #endif // SERUM_SERUM_HPP

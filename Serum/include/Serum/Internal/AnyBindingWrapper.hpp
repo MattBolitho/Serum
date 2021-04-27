@@ -10,7 +10,6 @@
 #include <any>
 #include "Serum/SerumException.hpp"
 #include "Serum/Bindings/BindingType.hpp"
-#include "Serum/Bindings/ConstantBinding.hpp"
 #include "Serum/Bindings/FunctionBinding.hpp"
 #include "Serum/Bindings/ResolverBinding.hpp"
 
@@ -36,31 +35,12 @@ namespace Serum::Internal
 			}
 
 			/// Initializes a new instance of the AnyBindingWrapper type.
-			/// @param constantBinding The constant binding.
-			template <typename TRequest>
-			explicit AnyBindingWrapper(Bindings::ConstantBinding<TRequest> const& constantBinding) noexcept
-				: bindingType(Bindings::BindingType::Constant),
-				  binding(std::any(constantBinding))
-			{
-			}
-
-			/// Initializes a new instance of the AnyBindingWrapper type.
 			/// @param resolverBinding The resolver binding.
 			template <typename TRequest>
 			explicit AnyBindingWrapper(Bindings::ResolverBinding<TRequest> const& resolverBinding) noexcept
 				: bindingType(Bindings::BindingType::Resolver),
 				  binding(std::any(resolverBinding))
 			{
-			}
-
-			/// Creates an AnyBindingWrapper instance for the given constant binding.
-			/// @tparam TRequest The type of the request.
-			/// @param binding The binding.
-			/// @returns An AnyBindingWrapper instance for the given constant binding.
-			template <typename TRequest>
-			static AnyBindingWrapper FromConstantBinding(Bindings::ConstantBinding<TRequest>const& binding) noexcept
-			{
-				return AnyBindingWrapper(Bindings::BindingType::Constant, binding);
 			}
 
 			/// Creates an AnyBindingWrapper instance for the given function binding.
@@ -90,17 +70,6 @@ namespace Serum::Internal
 				return bindingType;
 			}
 
-			/// Gets the wrapped binding as a constant binding.
-			/// @tparam TRequest The type of the request.
-			/// @returns The wrapped binding as a constant binding.
-			/// @throws SerumException If the underlying type is not a constant binding.
-			template <typename TRequest>
-			[[nodiscard]] Bindings::ConstantBinding<TRequest> AsConstantBinding() const
-			{
-				VerifyBindingType(Bindings::BindingType::Constant);
-				return this->CastBinding<Bindings::ConstantBinding<TRequest>>();
-			}
-
 			/// Gets the wrapped binding as a function binding.
 			/// @tparam TRequest The type of the request.
 			/// @returns The wrapped binding as a function binding.
@@ -124,6 +93,9 @@ namespace Serum::Internal
 			}
 
 		private:
+			Bindings::BindingType bindingType;
+			std::any binding;
+
 			AnyBindingWrapper(const Bindings::BindingType bindingType, std::any binding) noexcept
 				: bindingType(bindingType), binding(std::move(binding))
 			{
@@ -156,10 +128,6 @@ namespace Serum::Internal
 					throw SerumException("Failed to cast underlying binding.");
 				}
 			}
-
-
-			Bindings::BindingType bindingType;
-			std::any binding;
 	};
 }
 
