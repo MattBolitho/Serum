@@ -13,7 +13,6 @@
 #include "Serum/Bindings/ConstantBinding.hpp"
 #include "Serum/Bindings/FunctionBinding.hpp"
 #include "Serum/Bindings/ResolverBinding.hpp"
-#include "Serum/Bindings/ConstructorBinding.hpp"
 
 namespace Serum::Internal
 {
@@ -24,15 +23,6 @@ namespace Serum::Internal
 			/// Initializes a new instance of the AnyBindingWrapper type.
 			AnyBindingWrapper() noexcept
 				: bindingType(Bindings::BindingType::Unknown), binding(std::any())
-			{
-			}
-
-			/// Initializes a new instance of the AnyBindingWrapper type.
-			/// @param constructorBinding The constructor binding.
-			template <typename TRequest>
-			explicit AnyBindingWrapper(Bindings::ConstructorBinding<TRequest> const& constructorBinding) noexcept
-				: bindingType(Bindings::BindingType::Construct),
-				  binding(std::any(constructorBinding))
 			{
 			}
 
@@ -93,16 +83,6 @@ namespace Serum::Internal
 				return AnyBindingWrapper(Bindings::BindingType::Resolver, binding);
 			}
 
-			/// Creates an AnyBindingWrapper instance for the given constructor binding.
-			/// @tparam TRequest The type of the request.
-			/// @param binding The binding.
-			/// @returns An AnyBindingWrapper instance for the given constructor binding.
-			template <typename TRequest>
-			static AnyBindingWrapper FromConstructorBinding(Bindings::ConstructorBinding<TRequest> const& binding) noexcept
-			{
-				return AnyBindingWrapper(Bindings::BindingType::Construct, binding);
-			}
-
 			/// Gets the underlying binding type.
 			/// @returns The underlying binding type.
 			[[nodiscard]] Bindings::BindingType GetBindingType() const noexcept
@@ -141,17 +121,6 @@ namespace Serum::Internal
 			{
 				VerifyBindingType(Bindings::BindingType::Resolver);
 				return this->CastBinding<Bindings::ResolverBinding<TRequest>>();
-			}
-
-			/// Gets the wrapped binding as a constructor binding.
-			/// @tparam TRequest The type of the request.
-			/// @returns The wrapped binding as a constructor binding.
-			/// @throws SerumException If the underlying type is not a constructor binding.
-			template <typename TRequest>
-			[[nodiscard]] Bindings::ConstructorBinding<TRequest> AsConstructorBinding() const
-			{
-				VerifyBindingType(Bindings::BindingType::Construct);
-				return this->CastBinding<Bindings::ConstructorBinding<TRequest>>();
 			}
 
 		private:

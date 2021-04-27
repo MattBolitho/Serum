@@ -56,9 +56,6 @@ namespace Serum
 					case Bindings::BindingType::Resolver:
 						return binding.AsResolverBinding<TRequest>().Resolve();
 
-					case Bindings::BindingType::Construct:
-						return binding.AsConstructorBinding<TRequest>().Resolve();
-
 					case Bindings::BindingType::Unknown:
 					default:
 						throw SerumException("Could not resolve binding. Binding type was unknown or invalid.");
