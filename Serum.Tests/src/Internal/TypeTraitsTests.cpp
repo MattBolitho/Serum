@@ -2,8 +2,7 @@
 /// Unit tests for the type traits header.
 
 #include "catch.hpp"
-#include "Serum/Internal/TypeTraits.hpp"
-#include "Serum/SerumContainer.hpp"
+#include "Serum/Serum.hpp"
 
 namespace Serum::Internal::TypeTraitsTests
 {

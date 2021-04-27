@@ -2,21 +2,21 @@
 /// Unit tests for the SerumContainer type.
 
 #include "catch.hpp"
-#include "Serum/SerumContainer.hpp"
 #include "Serum.Tests/TestType.hpp"
 #include "Serum.Tests/TestResolver.hpp"
+#include "Serum/Serum.hpp"
 
 namespace Serum::SerumContainerTests
 {
 	TEST_CASE("SerumContainer_GetNumberOfBindings")
 	{
 		constexpr auto expected = 4;
-		const auto container = SerumContainer().BindConstant<std::string>(std::string("hello"))
+		auto const container = SerumContainer().BindConstant<std::string>(std::string("hello"))
 											   .BindConstant<int>(0)
 											   .BindConstant<float>(0.f)
 											   .BindConstant<double>(0.0);
 
-		const auto actual = container.GetNumberOfBindings();
+		auto const actual = container.GetNumberOfBindings();
 
 		REQUIRE(expected == actual);
 	}
@@ -24,7 +24,7 @@ namespace Serum::SerumContainerTests
 	TEST_CASE("SerumContainer_HasKey")
 	{
 		constexpr auto bindingName = "test-binding";
-		const auto container = SerumContainer().BindConstant<double>(1.2345, bindingName)
+		auto const container = SerumContainer().BindConstant<double>(1.2345, bindingName)
 											   .BindConstant<int>(4);
 
 		SECTION("WhenNamedKeyExists_ReturnsTrue")
@@ -53,7 +53,7 @@ namespace Serum::SerumContainerTests
 		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
 		{
 			auto container = SerumContainer();
-			const std::string testValue = "This is a test.";
+			std::string const testValue = "This is a test.";
 
 			container.BindConstant<std::string>(testValue);
 

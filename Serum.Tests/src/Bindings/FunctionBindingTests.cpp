@@ -2,14 +2,14 @@
 /// Unit tests for the FunctionBinding type.
 
 #include "catch.hpp"
+#include "Serum/Serum.hpp"
 #include "Serum.Tests/TestType.hpp"
-#include "Serum/Bindings/FunctionBinding.hpp"
 
 namespace Serum::Bindings::FunctionBindingTests
 {
 	TEST_CASE("FunctionBinding_ConstructorCorrectlyIntializesMembers")
 	{
-		const std::string name = "Test Name";
+		std::string const name = "Test Name";
 
 		auto binding = FunctionBinding<int>([]() { return 3; }, name);
 

@@ -3,14 +3,14 @@
 
 #include <sstream>
 #include "catch.hpp"
-#include "Serum/Bindings/BindingKey.hpp"
+#include "Serum/Serum.hpp"
 
 namespace Serum::Bindings::BindingKeyTests
 {
 	TEST_CASE("BindingKey_Constructor_CorrectlyInitializesMembers")
 	{
-		const std::type_index requestType = typeid(int);
-		const std::string name = "Test Name";
+		std::type_index const requestType = typeid(int);
+		std::string const name = "Test Name";
 
 		auto bindingKey = BindingKey(requestType, name);
 
@@ -22,9 +22,9 @@ namespace Serum::Bindings::BindingKeyTests
 	{
 		std::stringstream stringStream;
 		std::stringstream expectedStringStream;
-		const std::string expected = "[int, \"test\"]";
+		std::string const expected = "[int, \"test\"]";
 		expectedStringStream << "[" << typeid(int).name() << ", \"test\"]";
-		const auto bindingKey = BindingKey(typeid(int), "test");
+		auto const bindingKey = BindingKey(typeid(int), "test");
 
 		stringStream << bindingKey;
 

@@ -20,7 +20,7 @@ namespace Serum::SerumExceptionTests
 
 		SECTION("String_SetsCorrectMessage")
 		{
-			const std::string message = "Test message.";
+			std::string const message = "Test message.";
 
 			auto exception = SerumException(message);
 
