@@ -4,13 +4,7 @@
 #ifndef SERUM_SERUM_CONTAINER_HPP
 #define SERUM_SERUM_CONTAINER_HPP
 
-#include <sstream>
-#include <memory>
-#include <unordered_map>
-#include <any>
-#include <type_traits>
-#include <optional>
-#include "Serum/SerumException.hpp"
+#include "Serum/Internal/Common.hpp"
 #include "Serum/Internal/AnyBindingWrapper.hpp"
 #include "Serum/Internal/TypeTraits.hpp"
 #include "Serum/Bindings/BindingKey.hpp"

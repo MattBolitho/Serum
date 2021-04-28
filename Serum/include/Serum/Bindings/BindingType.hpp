@@ -4,7 +4,7 @@
 #ifndef SERUM_BINDINGS_BINDING_TYPE_HPP
 #define SERUM_BINDINGS_BINDING_TYPE_HPP
 
-#include <ostream>
+#include "Serum/Internal/Common.hpp"
 
 namespace Serum::Bindings
 {

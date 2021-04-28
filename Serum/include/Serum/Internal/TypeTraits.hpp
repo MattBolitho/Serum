@@ -4,8 +4,6 @@
 #ifndef SERUM_INTERNAL_TYPE_TRAITS_HPP
 #define SERUM_INTERNAL_TYPE_TRAITS_HPP
 
-#include <type_traits>
-
 namespace Serum
 {
 	class SerumContainer;

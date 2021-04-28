@@ -4,9 +4,7 @@
 #ifndef SERUM_BINDINGS_FUNCTION_BINDING_HPP
 #define SERUM_BINDINGS_FUNCTION_BINDING_HPP
 
-#include <string>
-#include <functional>
-#include <utility>
+#include "Serum/Internal/Common.hpp"
 #include "Serum/Bindings/Binding.hpp"
 
 namespace Serum::Bindings

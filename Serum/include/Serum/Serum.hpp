@@ -4,7 +4,7 @@
 #ifndef SERUM_SERUM_HPP
 #define SERUM_SERUM_HPP
 
-#include "Serum/SerumException.hpp"
+#include "Serum/Internal/Common.hpp"
 #include "Serum/SerumResolver.hpp"
 #include "Serum/SerumContainer.hpp"
 

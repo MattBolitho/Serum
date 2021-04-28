@@ -4,8 +4,7 @@
 #ifndef SERUM_BINDINGS_BINDING_HPP
 #define SERUM_BINDINGS_BINDING_HPP
 
-#include <string>
-#include <typeindex>
+#include "Serum/Internal/Common.hpp"
 #include "Serum/Bindings/BindingType.hpp"
 #include "Serum/Bindings/BindingKey.hpp"
 

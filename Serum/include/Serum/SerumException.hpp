@@ -4,8 +4,7 @@
 #ifndef SERUM_SERUM_EXCEPTION_HPP
 #define SERUM_SERUM_EXCEPTION_HPP
 
-#include <string>
-#include <stdexcept>
+#include "Serum/Internal/Common.hpp"
 
 namespace Serum
 {

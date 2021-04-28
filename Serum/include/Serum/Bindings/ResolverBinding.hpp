@@ -4,10 +4,7 @@
 #ifndef SERUM_BINDINGS_RESOLVER_BINDING_HPP
 #define SERUM_BINDINGS_RESOLVER_BINDING_HPP
 
-#include <utility>
-#include <string>
-#include <memory>
-#include "Serum/SerumResolver.hpp"
+#include "Serum/Internal/Common.hpp"
 #include "Serum/Bindings/Binding.hpp"
 
 namespace Serum::Bindings

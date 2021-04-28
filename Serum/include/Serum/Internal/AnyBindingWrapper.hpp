@@ -5,10 +5,7 @@
 #ifndef SERUM_INTERNAL_ANY_BINDING_WRAPPER_HPP
 #define SERUM_INTERNAL_ANY_BINDING_WRAPPER_HPP
 
-#include <sstream>
-#include <utility>
-#include <any>
-#include "Serum/SerumException.hpp"
+#include "Serum/Internal/Common.hpp"
 #include "Serum/Bindings/BindingType.hpp"
 #include "Serum/Bindings/FunctionBinding.hpp"
 #include "Serum/Bindings/ResolverBinding.hpp"
