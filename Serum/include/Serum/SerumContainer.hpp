@@ -227,7 +227,7 @@ namespace Serum
 			}
 
 		private:
-			[[nodiscard]] auto GetBinding(Bindings::BindingKey const& key) const
+			[[nodiscard]] std::optional<Internal::AnyBindingWrapper> GetBinding(Bindings::BindingKey const& key) const
 			{
 				auto const iterator = bindings.find(key);
 
