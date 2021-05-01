@@ -165,7 +165,7 @@ namespace Serum::SerumContainerTests
 
 			container.BindRawPointer<TestType>();
 
-			auto resolvedPointer = container.Get<TestType*>();
+			auto* resolvedPointer = container.Get<TestType*>();
 			CHECK(TestType() == *resolvedPointer);
 			delete resolvedPointer;
 		}

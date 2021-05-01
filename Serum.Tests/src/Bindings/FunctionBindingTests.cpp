@@ -13,17 +13,17 @@ namespace Serum::Bindings::FunctionBindingTests
 
 		auto binding = FunctionBinding<int>([]() { return 3; }, name);
 
-		REQUIRE(binding.GetName() == name);
+		REQUIRE(binding.GetBindingKey() == BindingKey(typeid(int), name));
 		REQUIRE(binding.GetBindingType() == BindingType::Function);
-		REQUIRE(binding.GetTypeIndex() == typeid(int));
 	}
 
 	TEST_CASE("FunctionBinding_ResolvesCorrectly")
 	{
 		TestType testValue = { 4, true, "test" };
 		auto binding = FunctionBinding<TestType>([&]() { return testValue; });
+		auto context = ResolutionContext();
 
-		auto result = binding.Resolve();
+		auto result = binding.Resolve(context);
 
 		REQUIRE(testValue == result);
 	}

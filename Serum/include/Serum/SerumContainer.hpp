@@ -29,29 +29,21 @@ namespace Serum
 			template <typename TRequest>
 			[[nodiscard]] auto Get(std::string const& name = "") const
 			{
-				auto const key = Bindings::BindingKey(typeid(TRequest), name);
-				auto const optionalBinding = GetBinding(key);
+				auto resolutionContext = ResolutionContext();
 
-				if (!optionalBinding.has_value())
-				{
-					std::stringstream errorMessageStream;
-					errorMessageStream << "No binding registered for " << key << ".";
-					throw SerumException(errorMessageStream.str());
-				}
+				return this->GetCore<TRequest>(resolutionContext, name);
+			}
 
-				const auto& binding = optionalBinding.value();
-				switch (binding.GetBindingType())
-				{
-					case Bindings::BindingType::Function:
-						return binding.AsFunctionBinding<TRequest>().Resolve();
-
-					case Bindings::BindingType::Resolver:
-						return binding.AsResolverBinding<TRequest>().Resolve();
-
-					case Bindings::BindingType::Unknown:
-					default:
-						throw SerumException("Could not resolve binding. Binding type was unknown or invalid.");
-				}
+			/// Resolves a bound service from the container.
+			/// @tparam TRequest The type of the service to request.
+			/// @param resolutionContext The resolution context.
+			/// @param name Optionally, the name of the binding.
+			/// @returns The resolved service.
+			/// @throws SerumException If no matching bindings exist.
+			template <typename TRequest>
+			[[nodiscard]] auto Get(ResolutionContext& resolutionContext, std::string const& name = "") const
+			{
+				return this->GetCore<TRequest>(resolutionContext, name);
 			}
 
 			/// Gets the number of bindings that have been registered to the container.
@@ -251,6 +243,34 @@ namespace Serum
 				bindings[key] = Internal::AnyBindingWrapper(binding);
 
 				return *this;
+			}
+
+			template <typename TRequest>
+			[[nodiscard]] auto GetCore(ResolutionContext& resolutionContext, std::string const& name) const
+			{
+				auto const key = Bindings::BindingKey(typeid(TRequest), name);
+				auto const optionalBinding = GetBinding(key);
+
+				if (!optionalBinding.has_value())
+				{
+					std::stringstream errorMessageStream;
+					errorMessageStream << "No binding registered for " << key << ".";
+					throw SerumException(errorMessageStream.str());
+				}
+
+				const auto& binding = optionalBinding.value();
+				switch (binding.GetBindingType())
+				{
+					case Bindings::BindingType::Function:
+						return binding.AsFunctionBinding<TRequest>().Resolve(resolutionContext);
+
+					case Bindings::BindingType::Resolver:
+						return binding.AsResolverBinding<TRequest>().Resolve(resolutionContext);
+
+					case Bindings::BindingType::Unknown:
+					default:
+						throw SerumException("Could not resolve binding. Binding type was unknown or invalid.");
+				}
 			}
 
 			/// Stores the bindings.

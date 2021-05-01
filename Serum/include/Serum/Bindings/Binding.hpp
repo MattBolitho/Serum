@@ -7,6 +7,7 @@
 #include "Serum/Internal/Common.hpp"
 #include "Serum/Bindings/BindingType.hpp"
 #include "Serum/Bindings/BindingKey.hpp"
+#include "Serum/ResolutionContext.hpp"
 
 namespace Serum::Bindings
 {
@@ -39,8 +40,18 @@ namespace Serum::Bindings
 			Binding& operator=(Binding&& binding) = default;
 
 			/// Resolves the binding.
+			/// @param context The resolution context.
 			/// @returns The resolved service.
-			virtual TRequest Resolve() = 0;
+			TRequest Resolve(ResolutionContext& context)
+			{
+				context.resolutionPath.emplace_back(key);
+
+				auto result = ResolveCore();
+
+				context.resolutionPath.pop_back();
+
+				return result;
+			}
 
 			/// Gets the binding type.
 			/// @returns The binding type.
@@ -49,25 +60,11 @@ namespace Serum::Bindings
 				return bindingType;
 			}
 
-			/// Gets the type index for the request type.
-			/// @returns The type index for the request type.
-			[[nodiscard]] std::type_index GetTypeIndex() const noexcept
-			{
-				return requestType;
-			}
-
-			/// Gets the name of the binding.
-			/// @returns The name of the binding.
-			[[nodiscard]] std::string GetName() const noexcept
-			{
-				return name;
-			}
-
 			/// Gets a type index for the binding.
 			/// @returns The type index for the binding.
 			[[nodiscard]] BindingKey GetBindingKey() const noexcept
 			{
-				return BindingKey(requestType, name);
+				return key;
 			}
 
 		protected:
@@ -78,15 +75,17 @@ namespace Serum::Bindings
 				BindingType const bindingType,
 				std::string const& name = "") noexcept
 				: bindingType(bindingType),
-				  requestType(typeid(TRequest)),
-				  name(name)
+				  key(BindingKey(typeid(TRequest), name))
 			{
 			}
 
+			/// Resolves the binding.
+			/// @returns The resolved service.
+			virtual TRequest ResolveCore() = 0;
+
 		private:
 			BindingType bindingType;
-			std::type_index requestType;
-			std::string name;
+			BindingKey key;
 	};
 }
 

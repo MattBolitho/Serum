@@ -26,7 +26,8 @@ namespace Serum::Bindings
 			{
 			}
 
-			TRequest Resolve() override
+		protected:
+			TRequest ResolveCore() override
 			{
 				return resolveFunction();
 			}

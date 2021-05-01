@@ -28,6 +28,7 @@
 #include <iomanip>
 #include <ostream>
 #include <functional>
+#include <algorithm>
 #include <utility>
 
 #include "Serum/SerumException.hpp"
