@@ -4,6 +4,8 @@
 #ifndef SERUM_INTERNAL_TYPE_TRAITS_HPP
 #define SERUM_INTERNAL_TYPE_TRAITS_HPP
 
+#include "Serum/ResolutionContext.hpp"
+
 namespace Serum
 {
 	class SerumContainer;
@@ -12,7 +14,7 @@ namespace Serum
 	{
 		/// The expected function pointer signature of a Serum constructor.
 		template <typename T>
-		using SerumConstructorSignature = T (*)(SerumContainer&);
+		using SerumConstructorSignature = T (*)(SerumContainer&, ResolutionContext&);
 
 		/// Checks whether or not the type T has a Serum constructor.
 		/// @tparam T

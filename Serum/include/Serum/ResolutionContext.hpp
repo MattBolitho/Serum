@@ -34,7 +34,10 @@ namespace Serum
 					throw SerumException("Cannot get requesting type - resolution path is empty.");
 				}
 
-				return resolutionPath.back();
+				// The context will include the current binding as it is being resolved, so the previous
+				// binding needs to be checked.
+
+				return resolutionPath[resolutionPath.size() - 1];
 			}
 
 			/// Checks whether or not the resolution path contains a key with the given type.

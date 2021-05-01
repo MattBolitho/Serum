@@ -8,7 +8,7 @@ namespace Serum::Internal::TypeTraitsTests
 {
 	struct WithSerumConstructor final
 	{
-		static WithSerumConstructor SerumConstructor(SerumContainer& container)
+		static WithSerumConstructor SerumConstructor(SerumContainer& container, ResolutionContext& resolutionContext)
 		{
 			return WithSerumConstructor();
 		}
