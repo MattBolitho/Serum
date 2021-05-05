@@ -18,7 +18,10 @@ namespace Serum::Bindings
 		Function,
 
 		/// The type is bound to the result of a method call on a SerumResolver instance.
-		Resolver
+		Resolver,
+
+		/// The type is bound such that it is resolved only once.
+		Singleton
 	};
 
 	/// Overload of the stream operator for string functionality.
@@ -36,6 +39,10 @@ namespace Serum::Bindings
 
 			case BindingType::Resolver:
 				stream << "Resolver";
+				break;
+
+			case BindingType::Singleton:
+				stream << "Singleton";
 				break;
 
 			default:

@@ -9,6 +9,7 @@
 #include "Serum/Bindings/BindingType.hpp"
 #include "Serum/Bindings/FunctionBinding.hpp"
 #include "Serum/Bindings/ResolverBinding.hpp"
+#include "Serum/Bindings/SingletonBinding.hpp"
 
 namespace Serum::Internal
 {
@@ -40,24 +41,13 @@ namespace Serum::Internal
 			{
 			}
 
-			/// Creates an AnyBindingWrapper instance for the given function binding.
-			/// @tparam TRequest The type of the request.
-			/// @param binding The binding.
-			/// @returns An AnyBindingWrapper instance for the given function binding.
+			/// Initializes a new instance of the AnyBindingWrapper type.
+			/// @param singletonBinding The resolver binding.
 			template <typename TRequest>
-			static AnyBindingWrapper FromFunctionBinding(Bindings::FunctionBinding<TRequest> const& binding) noexcept
+			explicit AnyBindingWrapper(Bindings::SingletonBinding<TRequest> const& singletonBinding) noexcept
+				: bindingType(singletonBinding.GetBindingType()),
+				  binding(std::any(singletonBinding))
 			{
-				return AnyBindingWrapper(Bindings::BindingType::Function, binding);
-			}
-
-			/// Creates an AnyBindingWrapper instance for the given resolver binding.
-			/// @tparam TRequest The type of the request.
-			/// @param binding The binding.
-			/// @returns An AnyBindingWrapper instance for the given resolver binding.
-			template <typename TRequest>
-			static AnyBindingWrapper FromResolverBinding(Bindings::ResolverBinding<TRequest> const& binding) noexcept
-			{
-				return AnyBindingWrapper(Bindings::BindingType::Resolver, binding);
 			}
 
 			/// Gets the underlying binding type.
@@ -87,6 +77,17 @@ namespace Serum::Internal
 			{
 				VerifyBindingType(Bindings::BindingType::Resolver);
 				return this->CastBinding<Bindings::ResolverBinding<TRequest>>();
+			}
+
+			/// Gets the wrapped binding as a singleton binding.
+			/// @tparam TRequest The type of the request.
+			/// @returns The wrapped binding as a singleton binding.
+			/// @throws SerumException If the underlying type is not a singleton binding.
+			template <typename TRequest>
+			[[nodiscard]] Bindings::SingletonBinding<TRequest> AsSingletonBinding() const
+			{
+				VerifyBindingType(Bindings::BindingType::Singleton);
+				return this->CastBinding<Bindings::SingletonBinding<TRequest>>();
 			}
 
 		private:

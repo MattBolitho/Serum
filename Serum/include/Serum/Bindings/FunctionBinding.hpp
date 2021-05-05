@@ -26,8 +26,13 @@ namespace Serum::Bindings
 			{
 			}
 
+			[[nodiscard]] std::shared_ptr<Binding<TRequest>> Clone() const override
+			{
+				return std::make_shared<FunctionBinding>(*this);
+			}
+
 		protected:
-			TRequest ResolveCore() override
+			TRequest ResolveCore(ResolutionContext& resolutionContext) override
 			{
 				return resolveFunction();
 			}

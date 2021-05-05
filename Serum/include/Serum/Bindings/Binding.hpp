@@ -46,12 +46,16 @@ namespace Serum::Bindings
 			{
 				context.resolutionPath.emplace_back(key);
 
-				auto result = ResolveCore();
+				auto result = ResolveCore(context);
 
 				context.resolutionPath.pop_back();
 
 				return result;
 			}
+
+			/// Deep clones the binding.
+			/// @returns A clone of the binding.
+			virtual std::shared_ptr<Binding<TRequest>> Clone() const = 0;
 
 			/// Gets the binding type.
 			/// @returns The binding type.
@@ -80,8 +84,9 @@ namespace Serum::Bindings
 			}
 
 			/// Resolves the binding.
+			/// @param resolutionContext The resolution context.
 			/// @returns The resolved service.
-			virtual TRequest ResolveCore() = 0;
+			virtual TRequest ResolveCore(ResolutionContext& resolutionContext) = 0;
 
 		private:
 			BindingType bindingType;

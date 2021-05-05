@@ -202,6 +202,76 @@ namespace Serum::SerumContainerTests
 		}
 	}
 
+	TEST_CASE("SerumContainer_BindSingletonRawPointer")
+	{
+		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
+		{
+			auto container = SerumContainer();
+
+			container.BindSingletonRawPointer<TestType>();
+
+			auto* resolvedPointer = container.Get<TestType*>();
+			CHECK(TestType() == *resolvedPointer);
+			delete resolvedPointer;
+		}
+
+		SECTION("WhenRequestedMultipleTimes_ReturnsSameInstance")
+		{
+			auto container = SerumContainer();
+
+			container.BindSingletonRawPointer<TestType>();
+
+			auto* resolvedPointer1 = container.Get<TestType*>();
+			auto* resolvedPointer2 = container.Get<TestType*>();
+			CHECK(resolvedPointer1 == resolvedPointer2);
+			CHECK(*resolvedPointer1 == *resolvedPointer2);
+			delete resolvedPointer1;
+		}
+
+		SECTION("WhenBindingExists_Throws")
+		{
+			auto container = SerumContainer();
+
+			container.BindSingletonRawPointer<TestType>();
+
+			REQUIRE_THROWS(container.BindRawPointer<TestType>());
+		}
+	}
+
+	TEST_CASE("SerumContainer_BindSingletonSharedPointer")
+	{
+		SECTION("WhenBindingDoesNotExist_CorrectlyBinds")
+		{
+			auto container = SerumContainer();
+
+			container.BindSingletonSharedPointer<TestType>();
+
+			auto resolvedPointer = container.Get<std::shared_ptr<TestType>>();
+			REQUIRE(TestType() == *resolvedPointer);
+		}
+
+		SECTION("WhenRequestedMultipleTimes_ReturnsSameInstance")
+		{
+			auto container = SerumContainer();
+
+			container.BindSingletonSharedPointer<TestType>();
+
+			auto resolvedPointer1 = container.Get<std::shared_ptr<TestType>>();
+			auto resolvedPointer2 = container.Get<std::shared_ptr<TestType>>();
+			REQUIRE(resolvedPointer1 == resolvedPointer2);
+			REQUIRE(*resolvedPointer1 == *resolvedPointer2);
+		}
+
+		SECTION("WhenBindingExists_Throws")
+		{
+			auto container = SerumContainer();
+
+			container.BindSingletonSharedPointer<TestType>();
+
+			REQUIRE_THROWS(container.BindSingletonSharedPointer<TestType>());
+		}
+	}
+
 	TEST_CASE("SerumContainer_BindingMethods_CanBeChained")
 	{
 		auto container = SerumContainer()
@@ -210,8 +280,10 @@ namespace Serum::SerumContainerTests
 								.BindResolver<TestType, TestResolver<TestType>>()
 								.BindToSelf<TestType>("self-binding")
 								.BindRawPointer<double>()
-								.BindSharedPointer<float>();
+								.BindSharedPointer<float>()
+								.BindSingletonRawPointer<double>("singleton")
+								.BindSingletonSharedPointer<float>("singleton");
 
-		REQUIRE(6 == container.GetNumberOfBindings());
+		REQUIRE(8 == container.GetNumberOfBindings());
 	}
 }
