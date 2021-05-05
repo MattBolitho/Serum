@@ -5,6 +5,8 @@
 #ifndef SERUM_SERUM_RESOLVER
 #define SERUM_SERUM_RESOLVER
 
+#include "Serum/ResolutionContext.hpp"
+
 namespace Serum
 {
     template <typename TResolve>
@@ -31,8 +33,9 @@ namespace Serum
             SerumResolver& operator=(SerumResolver&& resolver) = default;
 
             /// Resolves the binding.
+            /// @param resolutionContext The resolution context.
             /// @returns The resolved binding.
-            virtual TResolve Resolve() = 0;
+            virtual TResolve Resolve(ResolutionContext& resolutionContext) = 0;
 
         protected:
             /// Default constructor.

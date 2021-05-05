@@ -9,10 +9,11 @@ namespace Serum::Bindings::ResolverBindingTests
 {
     TEST_CASE("ResolverBinding_ResolvesCorrectly")
     {
+        auto context = ResolutionContext();
     	auto exporter = std::string();
         auto resolver = TestResolver<std::string>();
 
-    	auto actual = resolver.Resolve();
+    	auto actual = resolver.Resolve(context);
 
     	REQUIRE(exporter == actual);
     }

@@ -11,7 +11,7 @@ namespace Serum::Bindings::FunctionBindingTests
 	{
 		std::string const name = "Test Name";
 
-		auto binding = FunctionBinding<int>([]() { return 3; }, name);
+		auto binding = FunctionBinding<int>([&](ResolutionContext&) { return 3; }, name);
 
 		REQUIRE(binding.GetBindingKey() == BindingKey(typeid(int), name));
 		REQUIRE(binding.GetBindingType() == BindingType::Function);
@@ -20,7 +20,7 @@ namespace Serum::Bindings::FunctionBindingTests
 	TEST_CASE("FunctionBinding_ResolvesCorrectly")
 	{
 		TestType testValue = { 4, true, "test" };
-		auto binding = FunctionBinding<TestType>([&]() { return testValue; });
+		auto binding = FunctionBinding<TestType>([&](ResolutionContext&) { return testValue; });
 		auto context = ResolutionContext();
 
 		auto result = binding.Resolve(context);

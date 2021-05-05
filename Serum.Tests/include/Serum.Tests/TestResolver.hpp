@@ -18,13 +18,13 @@ namespace Serum
             {
             }
 
-            T Resolve() override
+            T Resolve(ResolutionContext&) override
             {
                 return value;
             }
 
-		private:
-    		T value;
+        private:
+            T value;
     };
 }
 

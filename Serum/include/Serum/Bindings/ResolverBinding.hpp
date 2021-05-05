@@ -19,22 +19,22 @@ namespace Serum::Bindings
             /// @param resolverPointer A pointer to the resolver to use.
             /// @param name Optionally, a name for the binding.
             explicit ResolverBinding(
-	            std::shared_ptr<SerumResolver<TRequest>> resolverPointer,
+                std::shared_ptr<SerumResolver<TRequest>> resolverPointer,
                 std::string const& name = "") noexcept
                 : Binding<TRequest>(BindingType::Resolver, name),
                   resolver(std::move(resolverPointer))
             {
             }
 
-			[[nodiscard]] std::shared_ptr<Binding<TRequest>> Clone() const override
-			{
-				return std::make_shared<ResolverBinding>(*this);
-			}
+            [[nodiscard]] std::shared_ptr<Binding<TRequest>> Clone() const override
+            {
+                return std::make_shared<ResolverBinding>(*this);
+            }
 
-		protected:
+        protected:
             TRequest ResolveCore(ResolutionContext& resolutionContext) override
             {
-                return resolver->Resolve();
+                return resolver->Resolve(resolutionContext);
             }
 
         private:

@@ -77,7 +77,7 @@ namespace Serum::SerumContainerTests
 			auto container = SerumContainer();
 			std::string testValue = "This is a test.";
 
-			container.BindFunction<std::string>([&]() { return testValue; });
+			container.BindFunction<std::string>([&](ResolutionContext&) { return testValue; });
 
 			REQUIRE(testValue == container.Get<std::string>());
 		}
@@ -86,9 +86,9 @@ namespace Serum::SerumContainerTests
 		{
 			auto container = SerumContainer();
 
-			container.BindFunction<int>([]() { return 4; });
+			container.BindFunction<int>([](ResolutionContext&) { return 4; });
 
-			REQUIRE_THROWS(container.BindFunction<int>([]() { return 7; }));
+			REQUIRE_THROWS(container.BindFunction<int>([](ResolutionContext&) { return 7; }));
 		}
 	}
 
@@ -276,7 +276,7 @@ namespace Serum::SerumContainerTests
 	{
 		auto container = SerumContainer()
 								.BindConstant<int>(7)
-								.BindFunction<std::string>([]() { return "Hello World"; })
+								.BindFunction<std::string>([](ResolutionContext&) { return "Hello World"; })
 								.BindResolver<TestType, TestResolver<TestType>>()
 								.BindToSelf<TestType>("self-binding")
 								.BindRawPointer<double>()
