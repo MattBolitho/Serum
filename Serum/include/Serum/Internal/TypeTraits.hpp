@@ -14,10 +14,10 @@ namespace Serum
 	{
 		/// The expected function pointer signature of a Serum constructor.
 		template <typename T>
-		using SerumConstructorSignature = T (*)(SerumContainer&, ResolutionContext&);
+		using SerumConstructorSignature = T* (*)(SerumContainer&, ResolutionContext&);
 
 		/// Checks whether or not the type T has a Serum constructor.
-		/// @tparam T
+		/// @tparam T The type to check.
 		template <typename T>
 		struct HasSerumConstructor final
 		{
