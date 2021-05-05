@@ -143,18 +143,18 @@ namespace Serum::SerumContainerTests
 		{
 			auto container = SerumContainer();
 
-			container.BindToSelf<TestType>();
+			container.BindToSelf<SerumConstructableTestType>();
 
-			REQUIRE(TestType() == container.Get<TestType>());
+			REQUIRE(TestType() == container.Get<SerumConstructableTestType>());
 		}
 
 		SECTION("WhenBindingExists_Throws")
 		{
 			auto container = SerumContainer();
 
-			container.BindToSelf<TestType>();
+			container.BindToSelf<SerumConstructableTestType>();
 
-			REQUIRE_THROWS(container.BindToSelf<TestType>());
+			REQUIRE_THROWS(container.BindToSelf<SerumConstructableTestType>());
 		}
 	}
 

@@ -163,12 +163,20 @@ namespace Serum
 			{
 				static_assert(
 					std::is_default_constructible<TRequest>::value,
-					"Could not bind type to self - Type must be default constructible.");
+					"Could not bind type to self - Type must be default constructable.");
 
-				auto const function = [](ResolutionContext&){ return TRequest(); };
-				auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
-
-				return this->BindCore(binding, name);
+				if constexpr (Internal::HasSerumConstructor<TRequest>::value)
+				{
+					auto const function = [this](ResolutionContext& context) { return *TRequest::SerumConstructor(*this, context); };
+					auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
+					return this->BindCore(binding, name);
+				}
+				else
+				{
+					auto const function = [](ResolutionContext&) { return TRequest(); };
+					auto const binding = Bindings::FunctionBinding<TRequest>(function, name);
+					return this->BindCore(binding, name);
+				}
 			}
 
 			/// Binds the type to a raw pointer. When the type is requested, the container will construct a new heap-allocated
