@@ -3,6 +3,7 @@
 
 #include "catch.hpp"
 #include "Serum.Tests/TestType.hpp"
+#include "Serum.Tests/TestSerumConstructableType.hpp"
 #include "Serum.Tests/TestResolver.hpp"
 #include "Serum/Serum.hpp"
 
@@ -163,10 +164,10 @@ namespace Serum::SerumContainerTests
 		{
 			auto container = SerumContainer();
 
-			container.BindRawPointer<TestType>();
+			container.BindRawPointer<SerumConstructableTestType>();
 
-			auto* resolvedPointer = container.Get<TestType*>();
-			CHECK(TestType() == *resolvedPointer);
+			auto* resolvedPointer = container.Get<SerumConstructableTestType*>();
+			CHECK(SerumConstructableTestType() == *resolvedPointer);
 			delete resolvedPointer;
 		}
 

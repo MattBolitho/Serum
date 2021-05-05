@@ -186,10 +186,18 @@ namespace Serum
 					std::is_convertible<TResolve*, TRequest*>::value,
 					"Could not bind pointer - The resolution pointer type is not convertible to the request pointer type.");
 
-				auto const function = [](ResolutionContext&){ return new TResolve; };
-				auto const binding = Bindings::FunctionBinding<TRequest*>(function, name);
-
-				return this->BindCore(binding, name);
+				if constexpr (Internal::HasSerumConstructor<TResolve>::value)
+				{
+					auto const function = [this](ResolutionContext& context) { return TResolve::SerumConstructor(*this, context); };
+					auto const binding = Bindings::FunctionBinding<TRequest*>(function, name);
+					return this->BindCore(binding, name);
+				}
+				else
+				{
+					auto const function = [](ResolutionContext&) { return new TResolve; };
+					auto const binding = Bindings::FunctionBinding<TRequest*>(function, name);
+					return this->BindCore(binding, name);
+				}
 			}
 
 			/// Binds the type to a std::shared_ptr instance. When the type is requested, the container will make a shared pointer
@@ -206,10 +214,21 @@ namespace Serum
 					std::is_convertible<std::shared_ptr<TResolve>, std::shared_ptr<TRequest>>::value,
 					"Could not bind shared pointer - The resolution pointer type is not convertible to the request pointer type.");
 
-				auto const function = [](ResolutionContext&){ return std::make_shared<TResolve>(); };
-				auto const binding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
-
-				return this->BindCore(binding, name);
+				if constexpr (Internal::HasSerumConstructor<TResolve>::value)
+				{
+					auto const function = [this](ResolutionContext& context)
+					{
+					    return std::shared_ptr<TRequest>(TResolve::SerumConstructor(*this, context));
+					};
+					auto const binding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
+					return this->BindCore(binding, name);
+				}
+				else
+				{
+					auto const function = [](ResolutionContext&) { return std::make_shared<TResolve>(); };
+					auto const binding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
+					return this->BindCore(binding, name);
+				}
 			}
 
 			/// Binds the type to a raw pointer as a singleton. When the type is first requested, the container will construct a
@@ -227,11 +246,20 @@ namespace Serum
 					std::is_convertible<TResolve*, TRequest*>::value,
 					"Could not bind pointer - The resolution pointer type is not convertible to the request pointer type.");
 
-				auto const function = [](ResolutionContext&){ return new TResolve; };
-				auto const innerBinding = Bindings::FunctionBinding<TRequest*>(function, name);
-				auto const binding = Bindings::SingletonBinding<TRequest*>(innerBinding);
-
-				return this->BindCore(binding, name);
+				if constexpr (Internal::HasSerumConstructor<TResolve>::value)
+				{
+					auto const function = [this](ResolutionContext& context) { return TResolve::SerumConstructor(*this, context); };
+					auto const innerBinding = Bindings::FunctionBinding<TRequest*>(function, name);
+					auto const binding = Bindings::SingletonBinding<TRequest*>(innerBinding);
+					return this->BindCore(binding, name);
+				}
+				else
+				{
+					auto const function = [](ResolutionContext&) { return new TResolve; };
+					auto const innerBinding = Bindings::FunctionBinding<TRequest*>(function, name);
+					auto const binding = Bindings::SingletonBinding<TRequest*>(innerBinding);
+					return this->BindCore(binding, name);
+				}
 			}
 
 			/// Binds the type to a std::shared_ptr instance as a singleton. When the type is first requested, the container will
@@ -249,11 +277,23 @@ namespace Serum
 					std::is_convertible<std::shared_ptr<TResolve>, std::shared_ptr<TRequest>>::value,
 					"Could not bind shared pointer - The resolution pointer type is not convertible to the request pointer type.");
 
-				auto const function = [](ResolutionContext&){ return std::make_shared<TResolve>(); };
-				auto const innerBinding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
-				auto const binding = Bindings::SingletonBinding<std::shared_ptr<TRequest>>(innerBinding);
-
-				return this->BindCore(binding, name);
+				if constexpr (Internal::HasSerumConstructor<TResolve>::value)
+				{
+					auto const function = [this](ResolutionContext& context)
+					{
+						return std::shared_ptr<TRequest>(TResolve::SerumConstructor(*this, context));
+					};
+					auto const innerBinding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
+					auto const binding = Bindings::SingletonBinding<std::shared_ptr<TRequest>>(innerBinding);
+					return this->BindCore(binding, name);
+				}
+				else
+				{
+					auto const function = [](ResolutionContext&) { return std::make_shared<TResolve>(); };
+					auto const innerBinding = Bindings::FunctionBinding<std::shared_ptr<TRequest>>(function, name);
+					auto const binding = Bindings::SingletonBinding<std::shared_ptr<TRequest>>(innerBinding);
+					return this->BindCore(binding, name);
+				}
 			}
 
 		private:

@@ -8,7 +8,7 @@
 
 namespace Serum
 {
-	struct TestType final
+	struct TestType
 	{
 		int intValue = 0;
 		bool boolValue = false;

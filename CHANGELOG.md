@@ -5,8 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 🔖 [0.2.0] - Unreleased
 ### ✨ Added
+- Adds a `SerumConstructor` signature for resolving tpyes recursively.
 - Resolution contexts.
-- Type trait for checking if a type has a Serum constructor.
+- Type trait for checking if a type has a `SerumConstructor`.
 - More bindings:
     - To `std::shared_ptr`.
     - To raw pointer.
