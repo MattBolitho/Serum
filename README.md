@@ -1,6 +1,6 @@
 # Serum
 <div style="display: inline;">
-<img src="https://img.shields.io/badge/version-0.2-blue"/>
+<img src="https://img.shields.io/badge/version-0.3-blue"/>
 <img src="https://img.shields.io/badge/license-MIT-brightgreen"/>
 </div>
 
