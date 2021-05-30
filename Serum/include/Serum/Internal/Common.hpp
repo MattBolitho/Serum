@@ -11,11 +11,12 @@
 #define SERUM_VERSION_MAJOR 0
 
 /// The minor component of this version of Serum.
-#define SERUM_VERSION_MINOR 2
+#define SERUM_VERSION_MINOR 3
 
 /// The patch component of this version of Serum.
 #define SERUM_VERSION_PATCH 0
 
+#include <vector>
 #include <string>
 #include <stdexcept>
 #include <sstream>
