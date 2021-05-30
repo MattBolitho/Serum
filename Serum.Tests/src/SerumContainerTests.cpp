@@ -22,7 +22,7 @@ namespace Serum::SerumContainerTests
 		REQUIRE(expected == actual);
 	}
 
-	TEST_CASE("SerumContainer_HasKey")
+	TEST_CASE("SerumContainer_HasBinding")
 	{
 		constexpr auto bindingName = "test-binding";
 		auto const container = SerumContainer().BindConstant<double>(1.2345, bindingName)
@@ -189,8 +189,17 @@ namespace Serum::SerumContainerTests
 
 			container.BindSharedPointer<TestType>();
 
-			auto resolvedPointer = container.Get<std::shared_ptr<TestType>>();
-			REQUIRE(TestType() == *resolvedPointer);
+			SECTION("CanBeResolvedWithGet")
+			{
+                auto resolvedPointer = container.Get<std::shared_ptr<TestType>>();
+                REQUIRE(TestType() == *resolvedPointer);
+			}
+
+            SECTION("CanBeResolvedWithGetSharedPointer")
+            {
+                auto resolvedPointer = container.GetSharedPointer<TestType>();
+                REQUIRE(TestType() == *resolvedPointer);
+            }
 		}
 
 		SECTION("WhenBindingExists_Throws")
@@ -247,8 +256,17 @@ namespace Serum::SerumContainerTests
 
 			container.BindSingletonSharedPointer<TestType>();
 
-			auto resolvedPointer = container.Get<std::shared_ptr<TestType>>();
-			REQUIRE(TestType() == *resolvedPointer);
+            SECTION("CanBeResolvedWithGet")
+            {
+                auto resolvedPointer = container.Get<std::shared_ptr<TestType>>();
+                REQUIRE(TestType() == *resolvedPointer);
+            }
+
+            SECTION("CanBeResolvedWithGetSharedPointer")
+            {
+                auto resolvedPointer = container.GetSharedPointer<TestType>();
+                REQUIRE(TestType() == *resolvedPointer);
+            }
 		}
 
 		SECTION("WhenRequestedMultipleTimes_ReturnsSameInstance")

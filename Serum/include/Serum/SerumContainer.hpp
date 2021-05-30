@@ -46,6 +46,31 @@ namespace Serum
 				return this->GetCore<TRequest>(resolutionContext, name);
 			}
 
+            /// Convenience function that calls Get with std::shared_ptr<TRequest>.
+            /// @tparam TRequest The type of the shared pointer to request.
+            /// @param name Optionally, the name of the binding.
+            /// @returns The resolved service.
+            /// @throws SerumException If no matching bindings exist.
+            template <typename TRequest>
+            [[nodiscard]] auto GetSharedPointer(std::string const& name = "")
+            {
+                auto resolutionContext = ResolutionContext();
+
+                return this->GetCore<std::shared_ptr<TRequest>>(resolutionContext, name);
+            }
+
+            /// Convenience function that calls Get with std::shared_ptr<TRequest>.
+            /// @tparam TRequest The type of the shared pointer to request.
+            /// @param resolutionContext The resolution context.
+            /// @param name Optionally, the name of the binding.
+            /// @returns The resolved shared pointer service.
+            /// @throws SerumException If no matching bindings exist.
+            template <typename TRequest>
+            [[nodiscard]] auto GetSharedPointer(ResolutionContext& resolutionContext, std::string const& name = "")
+            {
+                return this->GetCore<std::shared_ptr<TRequest>>(resolutionContext, name);
+            }
+
 			/// Gets the number of bindings that have been registered to the container.
 			/// @returns The number of bindings that have been registered to the container.
 			[[nodiscard]] auto GetNumberOfBindings() const noexcept
